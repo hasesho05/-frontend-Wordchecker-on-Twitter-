@@ -30,6 +30,7 @@
     "typescript": "4.9.5"
   },
   "devDependencies": {
+    "@types/react-redux": "^7.1.25",
     "chart.js": "^4.2.0",
     "react-chartjs-2": "^5.2.0"
   }

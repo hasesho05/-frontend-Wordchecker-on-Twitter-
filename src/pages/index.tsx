@@ -2,7 +2,9 @@ import { Box, Button, Container, Stack, TextField, Typography } from '@mui/mater
 import CircularProgress from '@mui/material/CircularProgress';
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+// @ts-ignore
 import { RootState } from 'store'
+// @ts-ignore
 import { userSlice } from 'store/user'
 import Header from '../components/Header'
 import apiAccess from './api/api';

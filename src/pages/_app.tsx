@@ -8,6 +8,7 @@ import createEmotionCache from '../createEmotionCathe';
 import { Provider } from 'react-redux'
 import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
+// @ts-ignore
 import { useStore } from 'store'
 
 const clientSideEmotionCache = createEmotionCache();

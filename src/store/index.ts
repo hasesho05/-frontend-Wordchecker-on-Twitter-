@@ -5,6 +5,7 @@ import {
   EnhancedStore,
 } from '@reduxjs/toolkit'
 
+// @ts-ignore
 import { userSlice } from 'store/user'
 import {
   persistReducer,
@@ -21,13 +22,13 @@ import createWebStorage from 'redux-persist/lib/storage/createWebStorage'
 // https://github.com/vercel/next.js/discussions/15687#discussioncomment-45319
 const createNoopStorage = () => {
   return {
-    getItem(_key) {
+    getItem(_key:any) {
       return Promise.resolve(null)
     },
-    setItem(_key, value) {
+    setItem(_key:any, value:any) {
       return Promise.resolve(value)
     },
-    removeItem(_key) {
+    removeItem(_key:any) {
       return Promise.resolve()
     },
   }
