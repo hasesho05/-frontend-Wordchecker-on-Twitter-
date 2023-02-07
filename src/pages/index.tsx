@@ -1,6 +1,9 @@
 import { Box, Button, Container, Stack, TextField, Typography } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress';
 import { useCallback, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from 'store'
+import { userSlice } from 'store/user'
 import Header from '../components/Header'
 import apiAccess from './api/api';
 import { Bar } from 'react-chartjs-2';
@@ -8,17 +11,67 @@ import { Chart, registerables } from "chart.js"
 
 Chart.register(...registerables)
 
+interface Option {
+  responsive: boolean,
+  plugins: {
+    title: {
+      display: boolean,
+      text: string,
+    }
+  }
+}
+
+interface GraphData {
+  labels: string[],
+  datasets: {
+    label: string,
+    data: number[],
+    backgroundColor: string[],
+    borderColor: string[],
+    borderWidth: number,
+  }[],
+  options: {
+    scales: {
+      yaxes_1: {
+        beginAtZero: boolean,
+      }
+    }
+  }
+}
+
 
 export default function Home() {
+  const dispatch = useDispatch()
+  const user = useSelector((state: RootState) => state.user)
+
   const [isHeaderShown, setIsHeaderShown] = useState(true);
   const [currentPosition, setCurrentPosition] = useState(0);
+  const [mode, setMode] = useState<number>(0)
   const [text, setText] = useState<string>("")
   const [tweetList, setTweetList] = useState([])
   const [loading, setLoading] = useState(false)
   const [wordData, setWordData] = useState([])
-  const [graphData, setGraphData] = useState<any>("")
-  const [options, setOptions] = useState<any>("")
+  const [graphData, setGraphData] = useState<GraphData>()
+  const [options, setOptions] = useState<Option>()
   const headerHeight = 40;
+
+  const handleUpdate = () => {
+    dispatch(
+      userSlice.actions.updateUser({
+        name: 'name',
+        age: 28,
+        email: 'email',
+        token: 'token',
+        history: [],
+      })
+    )
+  }
+  const handleReset = () => {
+    dispatch(userSlice.actions.reset())
+  }
+  const handleAddHistory = () => {
+    dispatch(userSlice.actions.addHistory('push'))
+  }
 
   const scrollEvent = useCallback(() => {
     const position = window.pageYOffset;
@@ -113,7 +166,6 @@ export default function Home() {
   },[wordData])
 
   useEffect(() => {
-
     setOptions({
       responsive: true,
       plugins: {
@@ -132,32 +184,70 @@ export default function Home() {
       <Box sx={{mx:"auto", maxWidth:"700px", backgroundColor:"#f2f2f2", height:"100%"}}>
         {isHeaderShown && <Header />}
         <Box p={10}>
-          <Stack spacing={3}>
-            <Typography variant='h1' fontSize={30}>英単語を入力</Typography>
-            <TextField required label="word" type="text" onChange={(e)=>handleText(e)}/>
-            <Button 
-              sx={[{backgroundColor:"black"},()=>({'&:hover': {backgroundColor:"black"}})]}  
-              variant="contained" 
-              size="large"
-              onClick={onSubmit}
-            >
-              Create
-            </Button>
-            {loading && 
-              <Box sx={{width:"100%"}}>
-                <CircularProgress sx={{ml:"250px",color:"gray"}}/>
-              </Box>
-            }
-          </Stack>
+          {mode === 0 &&
+          <>
+            <Stack spacing={3}>
+              <Typography variant='h1' fontSize={30}>英単語を入力</Typography>
+              <TextField required label="word" type="text" onChange={(e)=>handleText(e)}/>
+              <Button 
+                sx={[{backgroundColor:"black"},()=>({'&:hover': {backgroundColor:"black"}})]}  
+                variant="contained" 
+                size="large"
+                onClick={onSubmit}
+              >
+                Create
+              </Button>
+              {loading && 
+                <Box sx={{width:"100%"}}>
+                  <CircularProgress sx={{ml:"250px",color:"gray"}}/>
+                </Box>
+              }
+            </Stack>
 
-          <Box>
-            {graphData && options && <Bar data={graphData} options={options}/>}
-            {tweetList?.map((tweet: string, index:number) => (
-              <Box key={index} sx={{backgroundColor:"white", borderRadius:2, p:2, mt:2}}>
-                <Typography color="black">{tweet}</Typography>
-              </Box>
-            ))}
-          </Box>
+            <Box>
+              {graphData && options && 
+                <Bar data={graphData} options={options}/>}
+              {tweetList?.map((tweet: string, index:number) => (
+                <Box key={index} sx={{backgroundColor:"white", borderRadius:2, p:2, mt:2}}>
+                  <Typography color="black">{tweet}</Typography>
+                </Box>
+              ))}
+            </Box>
+          </>
+          }
+
+          {mode === 1 &&
+          <>
+            <Stack spacing={3}>
+              <Typography variant='h1' fontSize={30}>英単語を入力</Typography>
+              <TextField required label="word" type="text" onChange={(e)=>handleText(e)}/>
+              <Button 
+                sx={[{backgroundColor:"black"},()=>({'&:hover': {backgroundColor:"black"}})]}  
+                variant="contained" 
+                size="large"
+                onClick={onSubmit}
+              >
+                Create
+              </Button>
+              {loading && 
+                <Box sx={{width:"100%"}}>
+                  <CircularProgress sx={{ml:"250px",color:"gray"}}/>
+                </Box>
+              }
+            </Stack>
+
+            <Box>
+              {graphData && options && 
+                <Bar data={graphData} options={options}/>}
+              {tweetList?.map((tweet: string, index:number) => (
+                <Box key={index} sx={{backgroundColor:"white", borderRadius:2, p:2, mt:2}}>
+                  <Typography color="black">{tweet}</Typography>
+                </Box>
+              ))}
+            </Box>
+          </>
+          }
+          
         </Box>
       </Box>
     </Container>
