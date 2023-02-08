@@ -10,16 +10,16 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development'){
 }
 
 export const urls = {
-  setting: api_host + '/api/setting/',
+  check_user_id: api_host + '/userid',
   check: api_host + '/',
 }
 
 export const actionList = {
-  SETTING: 'SETTING',
+  CHECK_USER_ID: 'CHECK_USER_ID',
   CHECK: 'CHECK',
 }
 
-function apiAccess(action: string, funcSuccess: Function, payload: any){
+function apiAccess(action: string, funcSuccess: Function, funcError: Function, payload: any){
 
   const keys = Object.keys(payload);
   let search = '?';
@@ -31,12 +31,16 @@ function apiAccess(action: string, funcSuccess: Function, payload: any){
   }
 
   switch (action) {
-    case actionList.SETTING:
-      axios.get(urls.setting)
-      .then((response) => {
+    case actionList.CHECK_USER_ID:
+      axios({
+        method: 'post',
+        url: urls.check_user_id + search,
+        data: payload,
+        headers: { "Content-Type": "multipart/form-data" }
+      }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {
-        console.log(e);
+        funcError(e);
       });
       break;
 
@@ -49,10 +53,9 @@ function apiAccess(action: string, funcSuccess: Function, payload: any){
       }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {
-        console.log(e);
+        funcError(e);
       });
       break;
-
   }
 };
 

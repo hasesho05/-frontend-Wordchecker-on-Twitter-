@@ -1,9 +1,9 @@
-import { AppBar, Toolbar, IconButton, Typography, Button, Box, Avatar, Menu, MenuItem } from "@mui/material";
-import MenuIcon from '@mui/icons-material/Menu';
-import theme from "../theme";
+import { AppBar, Toolbar, IconButton, Typography, Box, Avatar, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
+import { SignUpModal } from "./Modal";
 
 export default function Header() {
+  const [signUpModalopen, setSignUpModalopen] = useState(false)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -12,6 +12,11 @@ export default function Header() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleSignUp = () => {
+    setSignUpModalopen(true)
+    handleClose();
+  }
 
   const ProfileMenu = () => {
     return (
@@ -24,9 +29,8 @@ export default function Header() {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem onClick={handleClose}>Login</MenuItem>
+        <MenuItem onClick={handleSignUp}>Signup</MenuItem>
       </Menu>
     )
   }
@@ -49,7 +53,15 @@ export default function Header() {
         </Toolbar>
       </AppBar>
       <ProfileMenu />
+      {signUpModalopen &&
+        <SignUpModal 
+          signUpModalopen={signUpModalopen}
+          setSignUpModalopen={setSignUpModalopen}
+        />}
     </Box>
   );
+
+
+
 }
 

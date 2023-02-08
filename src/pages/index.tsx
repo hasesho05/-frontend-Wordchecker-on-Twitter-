@@ -1,79 +1,21 @@
 import { Box, Button, Container, Stack, TextField, Typography } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress';
 import { useCallback, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-// @ts-ignore
-import { RootState } from 'store'
-// @ts-ignore
-import { userSlice } from 'store/user'
 import Header from '../components/Header'
-import apiAccess from './api/api';
-import { Bar } from 'react-chartjs-2';
-import { Chart, registerables } from "chart.js"
+import FindWord from '../components/FindWord';
+import GetUserInfo from '../components/GetUserInfo';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { signInAction } from '../redux/users/actions';
+import { getUserId } from '../redux/users/selector';
 
-Chart.register(...registerables)
-
-interface Option {
-  responsive: boolean,
-  plugins: {
-    title: {
-      display: boolean,
-      text: string,
-    }
-  }
-}
-
-interface GraphData {
-  labels: string[],
-  datasets: {
-    label: string,
-    data: number[],
-    backgroundColor: string[],
-    borderColor: string[],
-    borderWidth: number,
-  }[],
-  options: {
-    scales: {
-      yaxes_1: {
-        beginAtZero: boolean,
-      }
-    }
-  }
-}
 
 
 export default function Home() {
-  const dispatch = useDispatch()
-  const user = useSelector((state: RootState) => state.user)
-
   const [isHeaderShown, setIsHeaderShown] = useState(true);
   const [currentPosition, setCurrentPosition] = useState(0);
   const [mode, setMode] = useState<number>(0)
-  const [text, setText] = useState<string>("")
-  const [tweetList, setTweetList] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [wordData, setWordData] = useState([])
-  const [graphData, setGraphData] = useState<GraphData>()
-  const [options, setOptions] = useState<Option>()
   const headerHeight = 40;
-
-  const handleUpdate = () => {
-    dispatch(
-      userSlice.actions.updateUser({
-        name: 'name',
-        age: 28,
-        email: 'email',
-        token: 'token',
-        history: [],
-      })
-    )
-  }
-  const handleReset = () => {
-    dispatch(userSlice.actions.reset())
-  }
-  const handleAddHistory = () => {
-    dispatch(userSlice.actions.addHistory('push'))
-  }
 
   const scrollEvent = useCallback(() => {
     const position = window.pageYOffset;
@@ -82,26 +24,6 @@ export default function Home() {
     setCurrentPosition(position);
   }, []);
 
-  const handleText = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    e.preventDefault();
-    setText(e.target.value)
-  } 
-
-  const onSubmit = () => {
-    setWordData([])
-    setLoading(true)
-    setTweetList([])
-    const payload = {
-      id: text
-    };
-
-    const funcSuccess = (response: any) => {
-      setTweetList(response.data.tweetList)
-      setWordData(response.data.counter)
-      setLoading(false)
-    }
-    apiAccess('CHECK', funcSuccess, payload);
-  }
 
   useEffect(() => {
     window.addEventListener('scroll', scrollEvent);
@@ -110,148 +32,21 @@ export default function Home() {
     };
   }, [scrollEvent]);
 
-  useEffect(() => {
-    let word:Array<string> = []
-    let number:Array<number> = []
-    wordData.forEach((data: any) => {
-      word.push(data[0])
-      number.push(data[1])
-    })
-    
-    setGraphData({
-      // x 軸のラベル
-      labels: [...word],
-      datasets: [
-        {
-          label: '単語の出現回数',
-          // データの値
-          data: [...number],
-          // グラフの背景色
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(255, 205, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgb(235, 186, 245, 0.2)',
-            'rgb(245, 201, 186, 0.2)',
-            'rgb(245, 235, 186, 0.2)',
-            'rgb(196, 245, 186, 0.2)',
-          ],
-          // グラフの枠線の色
-          borderColor: [
-            'rgb(255, 99, 132)',
-            'rgb(255, 159, 64)',
-            'rgb(255, 205, 86)',
-            'rgb(75, 192, 192)',
-            'rgb(54, 162, 235)',
-            'rgb(153, 102, 255)',
-            'rgb(235, 186, 245)',
-            'rgb(245, 201, 186)',
-            'rgb(245, 235, 186)',
-            'rgb(196, 245, 186)',
-          ],
-          // グラフの枠線の太さ
-          borderWidth: 1,
-        },
-      ],
-      options: {
-        scales: {
-          "yaxes_1" : {
-            beginAtZero: true
-          }
-        }
-    }
-    })
-
-  },[wordData])
-
-  useEffect(() => {
-    setOptions({
-      responsive: true,
-      plugins: {
-        title: {
-          display: true,
-          text: text,
-        },
-      },
-    })
-  },[text])
-
-
-
+  const dispatch = useDispatch()
+  const selector:any = useSelector((state) => (state))
+  const users = getUserId(selector)
+  
   return (
-    <Container>
-      <Box sx={{mx:"auto", maxWidth:"700px", backgroundColor:"#f2f2f2", height:"100%"}}>
-        {isHeaderShown && <Header />}
-        <Box p={10}>
-          {mode === 0 &&
-          <>
-            <Stack spacing={3}>
-              <Typography variant='h1' fontSize={30}>英単語を入力</Typography>
-              <TextField required label="word" type="text" onChange={(e)=>handleText(e)}/>
-              <Button 
-                sx={[{backgroundColor:"black"},()=>({'&:hover': {backgroundColor:"black"}})]}  
-                variant="contained" 
-                size="large"
-                onClick={onSubmit}
-              >
-                Create
-              </Button>
-              {loading && 
-                <Box sx={{width:"100%"}}>
-                  <CircularProgress sx={{ml:"250px",color:"gray"}}/>
-                </Box>
-              }
-            </Stack>
-
-            <Box>
-              {graphData && options && 
-                <Bar data={graphData} options={options}/>}
-              {tweetList?.map((tweet: string, index:number) => (
-                <Box key={index} sx={{backgroundColor:"white", borderRadius:2, p:2, mt:2}}>
-                  <Typography color="black">{tweet}</Typography>
-                </Box>
-              ))}
-            </Box>
-          </>
-          }
-
-          {mode === 1 &&
-          <>
-            <Stack spacing={3}>
-              <Typography variant='h1' fontSize={30}>英単語を入力</Typography>
-              <TextField required label="word" type="text" onChange={(e)=>handleText(e)}/>
-              <Button 
-                sx={[{backgroundColor:"black"},()=>({'&:hover': {backgroundColor:"black"}})]}  
-                variant="contained" 
-                size="large"
-                onClick={onSubmit}
-              >
-                Create
-              </Button>
-              {loading && 
-                <Box sx={{width:"100%"}}>
-                  <CircularProgress sx={{ml:"250px",color:"gray"}}/>
-                </Box>
-              }
-            </Stack>
-
-            <Box>
-              {graphData && options && 
-                <Bar data={graphData} options={options}/>}
-              {tweetList?.map((tweet: string, index:number) => (
-                <Box key={index} sx={{backgroundColor:"white", borderRadius:2, p:2, mt:2}}>
-                  <Typography color="black">{tweet}</Typography>
-                </Box>
-              ))}
-            </Box>
-          </>
-          }
-          
+    <>
+    {isHeaderShown && <Header />}
+      <Box sx={{mx:"auto", width:"100%", maxWidth:"1000px", backgroundColor:"#f2f2f2", height:"100%"}}>
+        <Box sx={{mt:"20px", padding: {xs: "20px", sm:"50px"}}}>
+          <Button onClick={()=>dispatch(signInAction({uid:"0000", username:"あいうえお"}))}>登録</Button>
+          <div>{users}</div>
+          {mode === 0 && <FindWord/> }
+          {mode === 1 && <GetUserInfo />}
         </Box>
       </Box>
-    </Container>
+    </>
   )
 }
