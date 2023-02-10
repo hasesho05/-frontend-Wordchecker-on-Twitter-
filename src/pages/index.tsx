@@ -7,7 +7,7 @@ import GetUserInfo from '../components/GetUserInfo';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { signInAction } from '../redux/users/actions';
-import { getUserId } from '../redux/users/selector';
+import { getUser } from '../redux/users/selector';
 
 
 
@@ -34,7 +34,7 @@ export default function Home() {
 
   const dispatch = useDispatch()
   const selector:any = useSelector((state) => (state))
-  const users = getUserId(selector)
+  const users = getUser(selector)
   
   return (
     <>

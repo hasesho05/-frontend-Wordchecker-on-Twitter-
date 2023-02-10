@@ -1,29 +1,6 @@
 import { auth, db } from "../../config"
-import { signInAction } from "./actions"
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import {collection, setDoc, serverTimestamp, doc} from "firebase/firestore";
-import { AnyAction } from "@reduxjs/toolkit";
-
-export const signIn = () => {
-  return async (dispatch: any, getState: any) => {
-    const state = getState()
-    const isSignedIn = state.users.isSignedIn
-    if (!isSignedIn) {
-      const url = 'https://api.github.com/users/hasesho0005'
-      const response = await fetch(url)
-        .then(res => res.json())
-        .catch(() => null)
-      const username = response.login
-      dispatch(
-        signInAction({
-          isSignedIn: true,
-          uid: '0001',
-          username: username,
-        })
-      )
-    }
-  }
-}
+import { setDoc, serverTimestamp, doc} from "firebase/firestore";
 
 interface Props {
   username: string
@@ -32,7 +9,7 @@ interface Props {
   confirmpassword: string
 }
 
-export const signUp:any = async (props: any) => {
+export const signUp:any = async (props: Props) => {
   const { username, email, password, confirmpassword } = props;
   return async (dispatch: any) => {
     if(username === "" || email === "" || password === "" || confirmpassword === "") {
@@ -58,8 +35,6 @@ export const signUp:any = async (props: any) => {
             updated_at: timestamp,
             username: username,
           }
-
-          setDoc(doc(db, "users", uid), userInitialData)
         }
       })
   }

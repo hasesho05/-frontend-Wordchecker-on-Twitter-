@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 
 const usersSelector = (state:any) => state.users;
 
-export const getUserId = createSelector(
+export const getUser = createSelector(
   [usersSelector],
   state => state.username
 )

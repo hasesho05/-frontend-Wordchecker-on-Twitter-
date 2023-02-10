@@ -1,8 +1,13 @@
 import { AppBar, Toolbar, IconButton, Typography, Box, Avatar, Menu, MenuItem } from "@mui/material";
-import { useState } from "react";
-import { SignUpModal } from "./Modal";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { getUser } from "../redux/users/selector";
+import { SignInModal, SignUpModal } from "./Modal";
 
 export default function Header() {
+  const dispatch = useDispatch()
+  const [signInModalopen, setSignInModalopen] = useState(false)
   const [signUpModalopen, setSignUpModalopen] = useState(false)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -18,6 +23,16 @@ export default function Header() {
     handleClose();
   }
 
+  const handleSignIn = () => {
+    setSignInModalopen(true)
+    handleClose();
+  }
+
+  const selector:any = useSelector((state) => (state))
+  const users = getUser(selector)
+  console.log("user:",users);  
+  
+
   const ProfileMenu = () => {
     return (
       <Menu
@@ -29,7 +44,7 @@ export default function Header() {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>Login</MenuItem>
+        <MenuItem onClick={handleSignIn}>Login</MenuItem>
         <MenuItem onClick={handleSignUp}>Signup</MenuItem>
       </Menu>
     )
@@ -48,7 +63,7 @@ export default function Header() {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar/>
+            <Avatar />
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -58,6 +73,13 @@ export default function Header() {
           signUpModalopen={signUpModalopen}
           setSignUpModalopen={setSignUpModalopen}
         />}
+
+      {signInModalopen &&
+        <SignInModal
+          signInModalopen={signInModalopen}
+          setSignInModalopen={setSignInModalopen}
+        />
+      }
     </Box>
   );
 

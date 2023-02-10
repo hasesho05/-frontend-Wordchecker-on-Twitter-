@@ -10,7 +10,7 @@ const BlackButton = React.memo((props:Props) => {
   const { value, onClick } = props;
   return (
     <Button 
-      sx={[{backgroundColor:"black"},()=>({'&:hover': {backgroundColor:"black"}})]}  
+      sx={[{mt:"20px" ,backgroundColor:"black"},()=>({'&:hover': {backgroundColor:"black"}})]}  
       variant="contained" 
       size="large"
       onClick={onClick}

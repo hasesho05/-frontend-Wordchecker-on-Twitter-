@@ -2,8 +2,10 @@ import { Button } from '@mui/material';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import { auth, twitterProvider } from '../../config';
 import { signInWithPopup, TwitterAuthProvider } from 'firebase/auth';
+import { useDispatch } from 'react-redux';
 
 const TwitterLoginButton = () => { 
+  const dispatch = useDispatch();
   const TwitterLogin = () => {
     signInWithPopup(auth, twitterProvider).then( async (result) => {
       const credential = TwitterAuthProvider.credentialFromResult(result)
