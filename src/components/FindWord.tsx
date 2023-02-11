@@ -22,6 +22,25 @@ const FindWord = React.memo(() => {
     setText(e.target.value)
   },[])
 
+
+  const createHistory = () => {
+    var token = localStorage.getItem("token")
+    if (token === null) {
+      return
+    }
+    const payloadWord = {
+      word: text,
+      token: localStorage.getItem("token")
+    }
+    const funcSuccessWord = (response: any) => {
+      console.log(response)
+    }
+    const funcErrorWord = (response: any) => {
+      console.log(response)
+    }
+    apiAccess("WORD", funcSuccessWord, funcErrorWord, payloadWord)
+  }
+
   const onSubmit = useCallback(() => {
     setWordData([])
     setLoading(true)
@@ -34,6 +53,7 @@ const FindWord = React.memo(() => {
       setTweetList(response.data.tweetList)
       setWordData(response.data.counter)
       setLoading(false)
+      createHistory()
     }
 
     const funcError = (response: any) => {

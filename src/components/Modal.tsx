@@ -263,3 +263,32 @@ export const SignInModal = React.memo((props: SingInModal) => {
   </Box>
   )
 })
+
+interface HistoryModal {
+  historyModalopen: boolean;
+  setHistoryModalopen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const HistoryModal = React.memo((props: any) => {
+  const {historyModalopen, setHistoryModalopen } = props;
+  const handleClose = () => setHistoryModalopen(false);
+
+  return (
+  <Box>
+    <Modal
+      open={historyModalopen}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={style}>
+        <Stack spacing={3}>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          履歴
+        </Typography>
+        </Stack>
+      </Box>
+    </Modal>
+  </Box>
+  )
+})

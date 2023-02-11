@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { signOutAction } from "../redux/users/actions";
 import { getIcon, getSignedIn, getUser } from "../redux/users/selector";
 import GreenButton from "./common/GreenButton";
-import { SignInModal, SignUpModal } from "./Modal";
+import { HistoryModal, SignInModal, SignUpModal } from "./Modal";
 import HistoryIcon from '@mui/icons-material/History';
 import { Container } from "semantic-ui-react";
 import { getDownloadURL, ref } from "firebase/storage";
@@ -15,6 +15,7 @@ export default function Header() {
   const dispatch = useDispatch()
   const [signInModalopen, setSignInModalopen] = useState(false)
   const [signUpModalopen, setSignUpModalopen] = useState(false)
+  const [historyModalOpen, setHistoryModalOpen] = useState(false)
   const [image, setImage] = useState<string>('')
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -83,6 +84,7 @@ export default function Header() {
             <IconButton
               size="small"
               sx={{ ml:1, mr:1 }}
+              onClick={() => setHistoryModalOpen(true)}
             >
               <HistoryIcon sx={{fontSize:"40px", color:"white"}}/>
             </IconButton>
@@ -107,6 +109,7 @@ export default function Header() {
         </Toolbar>
       </AppBar>
       <ProfileMenu />
+
       {signUpModalopen &&
         <SignUpModal 
           signUpModalopen={signUpModalopen}
@@ -117,6 +120,12 @@ export default function Header() {
         <SignInModal
           signInModalopen={signInModalopen}
           setSignInModalopen={setSignInModalopen}
+        />
+      }
+      {historyModalOpen &&
+        <HistoryModal 
+          historyModalOpen={historyModalOpen}
+          setHistoryModalOpen={setHistoryModalOpen}
         />
       }
     </Box>
