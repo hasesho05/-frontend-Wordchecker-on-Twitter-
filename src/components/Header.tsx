@@ -8,11 +8,14 @@ import GreenButton from "./common/GreenButton";
 import { SignInModal, SignUpModal } from "./Modal";
 import HistoryIcon from '@mui/icons-material/History';
 import { Container } from "semantic-ui-react";
+import { getDownloadURL, ref } from "firebase/storage";
+import { firestorage } from "../config";
 
 export default function Header() {
   const dispatch = useDispatch()
   const [signInModalopen, setSignInModalopen] = useState(false)
   const [signUpModalopen, setSignUpModalopen] = useState(false)
+  const [image, setImage] = useState<string>('')
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -41,6 +44,18 @@ export default function Header() {
   const selector:any = useSelector((state) => (state))
   const isSignedIn = getSignedIn(selector)
   const icon = getIcon(selector)
+
+  useEffect(() => {
+    if (!icon) return
+    const gsReference = ref(firestorage, icon);
+    getDownloadURL(gsReference)
+    .then((url) => {
+      console.log(url);
+      setImage(url);
+    })
+    .catch((err) => console.log(err));
+  }, [icon])
+  
 
   const ProfileMenu = () => {
     return (
@@ -74,12 +89,12 @@ export default function Header() {
             <IconButton
               onClick={handleClick}
               size="small"
-              sx={{ ml:"auto", mr:1 }}
+              sx={{ ml:"auto", mr:1, backgroundColor:"gray" }}
               aria-controls={open ? 'account-menu' : undefined}
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
             >
-              <Avatar src={icon ? icon : null}/>
+              <Avatar src={image}/>
             </IconButton>
 
           </Container>

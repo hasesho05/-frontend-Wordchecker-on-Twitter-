@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { signInAction } from '../redux/users/actions';
 import { getUser } from '../redux/users/selector';
+import apiAccess from '../api/api';
 
 
 
@@ -27,10 +28,23 @@ export default function Home() {
   const dispatch = useDispatch()
   const selector:any = useSelector((state) => (state))
 
+  const getUserInfo = useCallback((token: string) => {
+    const payload = {
+      token: token
+    }
+    const funcSuccess = (response: any) => {
+      dispatch(signInAction({username: response.data.username, icon: response.data.icon}))
+    }
+    const funcError = (error: any) => {
+      console.log(error)
+    }
+    apiAccess("AUTHORIZATION", funcSuccess, funcError, payload)
+  },[])
+
   useEffect(() => {
     var token = localStorage.getItem('token')
     if (!token) return
-    dispatch(signInAction({uid:"0000", username:"あいうえお"}))
+    getUserInfo(token)
   }, [])
   
 
@@ -48,8 +62,6 @@ export default function Home() {
     {isHeaderShown && <Header />}
       <Box sx={{mx:"auto", width:"100%", maxWidth:"1000px", backgroundColor:"#f2f2f2", height:"100%"}}>
         <Box sx={{mt:"20px", padding: {xs: "20px", sm:"50px"}}}>
-          <Button onClick={()=>dispatch(signInAction({uid:"0000", username:"あいうえお"}))}>登録</Button>
-          <div>{users}</div>
           {mode === 0 && <FindWord/> }
           {mode === 1 && <GetUserInfo />}
         </Box>

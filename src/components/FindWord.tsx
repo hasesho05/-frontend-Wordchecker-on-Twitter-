@@ -115,7 +115,6 @@ const FindWord = React.memo(() => {
   return (
     <>
       <Stack spacing={3}>
-        <Typography variant='h1' fontSize={30}>英単語を入力</Typography>
         <FormControl>
           <TextInput 
             fullWidth={true}

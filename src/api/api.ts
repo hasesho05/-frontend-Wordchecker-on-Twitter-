@@ -12,6 +12,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development'){
 export const urls = {
   signup: api_host + '/user/signup',
   signin: api_host + '/user/signin',
+  authorization: api_host + '/user/authorization',
   check_user_id: api_host + '/userid',
   check: api_host + '/',
 }
@@ -19,6 +20,7 @@ export const urls = {
 export const actionList = {
   SIGNUP: 'SIGNUP',
   SIGNIN: 'SIGNIN',
+  AUTHORIZATION: 'AUTHORIZATION',
   CHECK_USER_ID: 'CHECK_USER_ID',
   CHECK: 'CHECK',
 }
@@ -38,9 +40,9 @@ function apiAccess(action: string, funcSuccess: Function, funcError: Function, p
     case actionList.SIGNUP:
       axios({
         method: 'post',
-        url: urls.signup + search,
+        url: urls.signup,
         data: payload,
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { "content-type": 'application/json', }
       }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {
@@ -50,10 +52,23 @@ function apiAccess(action: string, funcSuccess: Function, funcError: Function, p
 
     case actionList.SIGNIN:
       axios({
-        method: 'get',
-        url: urls.signin + search,
+        method: 'put',
+        url: urls.signin,
         data: payload,
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { "content-type": 'application/json', }
+      }).then((response) => {
+        funcSuccess(response);
+      }).catch((e) => {
+        funcError(e);
+      });
+      break;
+    
+    case actionList.AUTHORIZATION:
+      axios({
+        method: 'put',
+        url: urls.authorization,
+        data: payload,
+        headers: { "content-type": 'application/json', }
       }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {
@@ -66,7 +81,7 @@ function apiAccess(action: string, funcSuccess: Function, funcError: Function, p
         method: 'post',
         url: urls.check_user_id + search,
         data: payload,
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { "content-type": 'application/json', }
       }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {
@@ -79,7 +94,7 @@ function apiAccess(action: string, funcSuccess: Function, funcError: Function, p
         method: 'post',
         url: urls.check + search,
         data: payload,
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { "content-type": 'application/json', }
       }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {

@@ -12,6 +12,7 @@ import FlashMessage from "./common/FlashMessage";
 import { getDownloadURL, listAll } from "firebase/storage";
 import { ref } from "firebase/storage";
 import apiAccess from "../api/api";
+import { signInAction } from "../redux/users/actions";
 
 interface SignUpModal {
   signUpModalopen: boolean;
@@ -73,15 +74,27 @@ export const SignUpModal = React.memo((props: SignUpModal) => {
     console.log(error);
   })}
 
-  function handleSignup(userInitialData: any){
+  interface UserInitialData {
+    token: string;
+    username: string;
+    email: string;
+    icon: string;
+    password: string;
+  }
+
+  function handleSignup(userInitialData: UserInitialData){
     const payload = {
-      'userdata': userInitialData,
+      token: userInitialData.token,
+      username: username,
+      email: userInitialData.email,
+      password: userInitialData.password,
+      icon: userInitialData.icon,
     }
     const funcSuccess = (response: any) => {
       console.log("signup success");
     }
     const funcError = (error: any) => {
-      console.log("signup error");
+      console.log("signup error: ", error);
     }
     apiAccess('SIGNUP', funcSuccess, funcError, payload);
   }
@@ -98,20 +111,19 @@ export const SignUpModal = React.memo((props: SignUpModal) => {
         const user = result.user
         if(user) {
           const uid = user.uid
-          const timestamp = serverTimestamp()
           const userInitialData = {
             token: uid,
             username: username,
             email: email,
             icon: "gs://wordchecker-a26d8.appspot.com/" + imagePath,
-            created_at: timestamp,
+            password: password,
           }
+          handleClose();
           handleSignup(userInitialData);
           localStorage.setItem("token", uid);
           setMessage("ユーザー登録が完了しました。");
           setSeverity("success");
           setOpen(true);
-          handleClose();
         }})
       .catch((error) => {
         const errorCode = error.code;
@@ -137,7 +149,6 @@ export const SignUpModal = React.memo((props: SignUpModal) => {
     getDownloadURL(gsReference)
     .then((url) => {
       console.log(url);
-      
       setImage(url);
     })
     .catch((err) => console.log(err));
@@ -180,7 +191,8 @@ interface SingInModal {
 }
 
 export const SignInModal = React.memo((props: SingInModal) => {
-  const { signInModalopen, setSignInModalopen } = props;
+  const dispatch = useDispatch();
+  const {signInModalopen, setSignInModalopen } = props;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [severity, setSeverity] = useState<"error" | "success" | "info" | "warning">("success");
@@ -198,7 +210,31 @@ export const SignInModal = React.memo((props: SingInModal) => {
   },[setPassword])
 
   const handleSubmit = () => {
-    
+    const payload = {
+      email: email,
+      password: password,
+    }
+
+    const funcSuccess = (response: any) => {
+      if (response.data.status === "ok") {
+        console.log("signin success");
+        localStorage.setItem("token", response.data.data.token);
+        dispatch(signInAction({username: response.data.data.username, icon: response.data.data.icon}))
+        setMessage("ログインしました。");
+        setSeverity("success");
+        setOpen(true);
+        setTimeout(() => {
+          handleClose();
+        }, 1000)
+      }
+    }
+    const funcError = (error: any) => {
+      console.log("signin error: ", error);
+      setMessage("ログインに失敗しました。");
+      setSeverity("error");
+      setOpen(true);
+    }
+    apiAccess('SIGNIN', funcSuccess, funcError, payload);
   }
 
   return (
