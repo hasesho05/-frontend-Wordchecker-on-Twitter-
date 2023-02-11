@@ -2,7 +2,7 @@ const initialState = {
   users: {
     icon: "",
     isSignedIn: false,
-    uid: '',
+    token: '',
     username: '',
   }
 }

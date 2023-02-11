@@ -1,5 +1,5 @@
 import { useState } from "react";
-import apiAccess from "../pages/api/api";
+import apiAccess from "../api/api";
 import { GraphData, Option } from "../types/types";
 
 

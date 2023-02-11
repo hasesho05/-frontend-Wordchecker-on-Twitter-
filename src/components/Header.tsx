@@ -1,9 +1,13 @@
-import { AppBar, Toolbar, IconButton, Typography, Box, Avatar, Menu, MenuItem } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Typography, Box, Avatar, Menu, MenuItem, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { getUser } from "../redux/users/selector";
+import { signOutAction } from "../redux/users/actions";
+import { getIcon, getSignedIn, getUser } from "../redux/users/selector";
+import GreenButton from "./common/GreenButton";
 import { SignInModal, SignUpModal } from "./Modal";
+import HistoryIcon from '@mui/icons-material/History';
+import { Container } from "semantic-ui-react";
 
 export default function Header() {
   const dispatch = useDispatch()
@@ -28,10 +32,15 @@ export default function Header() {
     handleClose();
   }
 
+  const handleSignOut = () => {
+    localStorage.removeItem('token')
+    dispatch(signOutAction())
+    handleClose();
+  }
+
   const selector:any = useSelector((state) => (state))
-  const users = getUser(selector)
-  console.log("user:",users);  
-  
+  const isSignedIn = getSignedIn(selector)
+  const icon = getIcon(selector)
 
   const ProfileMenu = () => {
     return (
@@ -44,8 +53,7 @@ export default function Header() {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleSignIn}>Login</MenuItem>
-        <MenuItem onClick={handleSignUp}>Signup</MenuItem>
+        <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
       </Menu>
     )
   }
@@ -53,18 +61,34 @@ export default function Header() {
   return (
     <Box flexGrow={1}>
       <AppBar position="static" sx={{backgroundColor:"#598B2C"}}>
-        <Toolbar >
+        <Toolbar sx={{display:"flex", justifyContent:"space-between"}}>
           <Typography sx={{fontWeight:"bold", fontSize:20}}>WordChecker</Typography>
-          <IconButton
-            onClick={handleClick}
-            size="small"
-            sx={{ ml:"auto", mr:2 }}
-            aria-controls={open ? 'account-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-          >
-            <Avatar />
-          </IconButton>
+          {isSignedIn ? 
+          <Container sx={{display:"flex"}}>
+            <IconButton
+              size="small"
+              sx={{ ml:1, mr:1 }}
+            >
+              <HistoryIcon sx={{fontSize:"40px", color:"white"}}/>
+            </IconButton>
+            <IconButton
+              onClick={handleClick}
+              size="small"
+              sx={{ ml:"auto", mr:1 }}
+              aria-controls={open ? 'account-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? 'true' : undefined}
+            >
+              <Avatar src={icon ? icon : null}/>
+            </IconButton>
+
+          </Container>
+          :
+            <Box sx={{display: "flex", ml:"auto"}}>
+              <GreenButton value={"ログイン"} onClick={handleSignIn}/>
+              <GreenButton value={"新規登録"} onClick={handleSignUp}/>
+            </Box>
+          }
         </Toolbar>
       </AppBar>
       <ProfileMenu />
@@ -82,8 +106,5 @@ export default function Header() {
       }
     </Box>
   );
-
-
-
 }
 

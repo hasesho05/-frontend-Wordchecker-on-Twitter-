@@ -10,11 +10,15 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development'){
 }
 
 export const urls = {
+  signup: api_host + '/user/signup',
+  signin: api_host + '/user/signin',
   check_user_id: api_host + '/userid',
   check: api_host + '/',
 }
 
 export const actionList = {
+  SIGNUP: 'SIGNUP',
+  SIGNIN: 'SIGNIN',
   CHECK_USER_ID: 'CHECK_USER_ID',
   CHECK: 'CHECK',
 }
@@ -31,6 +35,32 @@ function apiAccess(action: string, funcSuccess: Function, funcError: Function, p
   }
 
   switch (action) {
+    case actionList.SIGNUP:
+      axios({
+        method: 'post',
+        url: urls.signup + search,
+        data: payload,
+        headers: { "Content-Type": "multipart/form-data" }
+      }).then((response) => {
+        funcSuccess(response);
+      }).catch((e) => {
+        funcError(e);
+      });
+      break;
+
+    case actionList.SIGNIN:
+      axios({
+        method: 'get',
+        url: urls.signin + search,
+        data: payload,
+        headers: { "Content-Type": "multipart/form-data" }
+      }).then((response) => {
+        funcSuccess(response);
+      }).catch((e) => {
+        funcError(e);
+      });
+      break;
+
     case actionList.CHECK_USER_ID:
       axios({
         method: 'post',

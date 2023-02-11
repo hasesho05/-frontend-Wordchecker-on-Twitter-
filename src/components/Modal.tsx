@@ -2,17 +2,16 @@ import { Box, Button, FormControl, Modal, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { signUp } from "../redux/users/operations";
 import BlackButton from "./common/BlackButton";
 import TextInput from "./common/TextInput";
 import TwitterLoginButton from "./common/TwitterLoginButton";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { setDoc, serverTimestamp, doc} from "firebase/firestore";
-import { auth, db, firestorage, storageRef } from "../config"
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { serverTimestamp } from "firebase/firestore";
+import { auth, firestorage, storageRef } from "../config"
 import FlashMessage from "./common/FlashMessage";
 import { getDownloadURL, listAll } from "firebase/storage";
 import { ref } from "firebase/storage";
-import { signInAction } from '../redux/users/actions';
+import apiAccess from "../api/api";
 
 interface SignUpModal {
   signUpModalopen: boolean;
@@ -33,11 +32,11 @@ const style = {
 
 export const SignUpModal = React.memo((props: SignUpModal) => {
   const {signUpModalopen, setSignUpModalopen} = props;
+  const handleClose = () => setSignUpModalopen(false);
   const dispatch = useDispatch();
 
   const [severity, setSeverity] = useState<"error" | "success" | "info" | "warning">("success");
   const [message, setMessage] = useState<string>("");
-  const handleClose = () => setSignUpModalopen(false);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,6 +44,7 @@ export const SignUpModal = React.memo((props: SignUpModal) => {
   const [open, setOpen] = useState(false);
   const [imagePath, setImagePath] = useState("");
   const [image, setImage] = useState("");
+
 
   const inputUserName = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value)
@@ -73,6 +73,18 @@ export const SignUpModal = React.memo((props: SignUpModal) => {
     console.log(error);
   })}
 
+  function handleSignup(userInitialData: any){
+    const payload = {
+      'userdata': userInitialData,
+    }
+    const funcSuccess = (response: any) => {
+      console.log("signup success");
+    }
+    const funcError = (error: any) => {
+      console.log("signup error");
+    }
+    apiAccess('SIGNUP', funcSuccess, funcError, payload);
+  }
 
   const handleSubmit = () => {
     if (password !== confirmPassword) {
@@ -88,19 +100,18 @@ export const SignUpModal = React.memo((props: SignUpModal) => {
           const uid = user.uid
           const timestamp = serverTimestamp()
           const userInitialData = {
-            uid: uid,
+            token: uid,
             username: username,
             email: email,
             icon: "gs://wordchecker-a26d8.appspot.com/" + imagePath,
-            updated_at: timestamp,
             created_at: timestamp,
           }
-          console.log(userInitialData);
+          handleSignup(userInitialData);
+          localStorage.setItem("token", uid);
           setMessage("ユーザー登録が完了しました。");
           setSeverity("success");
           setOpen(true);
           handleClose();
-          dispatch(signInAction({uid:userInitialData.uid, username:userInitialData.username, icon:userInitialData.icon}))
         }})
       .catch((error) => {
         const errorCode = error.code;
@@ -125,6 +136,8 @@ export const SignUpModal = React.memo((props: SignUpModal) => {
     const gsReference = ref(firestorage, "gs://wordchecker-a26d8.appspot.com/" + imagePath);
     getDownloadURL(gsReference)
     .then((url) => {
+      console.log(url);
+      
       setImage(url);
     })
     .catch((err) => console.log(err));
@@ -150,9 +163,9 @@ export const SignUpModal = React.memo((props: SignUpModal) => {
             <TextInput label={"メールアドレス"} fullWidth={true} multiline={false} required={true} rows={1} value={email} type={"email"} onChange={inputEmail}/>
             <TextInput label={"パスワード"} fullWidth={true} multiline={false} required={true} rows={1} value={password} type={"password"} onChange={inputPassword}/>
             <TextInput label={"パスワード(確認)"} fullWidth={true} multiline={false} required={true} rows={1} value={confirmPassword} type={"password"} onChange={inputConfirmPassword}/>
-            <BlackButton value={"送信"} onClick={handleSubmit}/>
+            <BlackButton value={"メールアドレスで登録"} onClick={handleSubmit}/>
           </FormControl>
-          <TwitterLoginButton />
+          <TwitterLoginButton handleClose={handleClose} setMessage={setMessage} setSeverity={setSeverity} setOpen={setOpen}/>
           </Stack>
         </Box>
       </Modal>
@@ -185,7 +198,7 @@ export const SignInModal = React.memo((props: SingInModal) => {
   },[setPassword])
 
   const handleSubmit = () => {
-    console.log("login");
+    
   }
 
   return (
@@ -204,9 +217,9 @@ export const SignInModal = React.memo((props: SingInModal) => {
         <FormControl>
           <TextInput label={"メールアドレス"} fullWidth={true} multiline={false} required={true} rows={1} value={email} type={"email"} onChange={inputEmail}/>
           <TextInput label={"パスワード"} fullWidth={true} multiline={false} required={true} rows={1} value={password} type={"password"} onChange={inputPassword}/>
-          <BlackButton value={"送信"} onClick={handleSubmit}/>
+          <BlackButton value={"メールアドレスでログイン"} onClick={handleSubmit}/>
         </FormControl>
-        <TwitterLoginButton />
+        <TwitterLoginButton handleClose={handleClose} setMessage={setMessage} setSeverity={setSeverity} setOpen={setOpen}/>
         </Stack>
       </Box>
     </Modal>

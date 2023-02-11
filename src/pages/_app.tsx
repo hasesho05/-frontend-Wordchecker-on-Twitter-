@@ -8,6 +8,10 @@ import theme from '../theme';
 import createEmotionCache from '../createEmotionCathe';
 import '../styles/globals.css'
 import createStore from '../redux/store/store';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { signInAction } from '../redux/users/actions';
+import { useEffect } from 'react';
 
 const clientSideEmotionCache = createEmotionCache();
 interface MyAppProps extends AppProps {

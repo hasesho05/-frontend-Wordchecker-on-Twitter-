@@ -3,7 +3,7 @@ import { Bar } from 'react-chartjs-2';
 import { Chart, registerables } from "chart.js"
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { GraphData, Option } from "../types/types";
-import apiAccess from "../pages/api/api";
+import apiAccess from "../api/api";
 import TextInput from "./common/TextInput";
 import BlackButton from "./common/BlackButton";
 Chart.register(...registerables)

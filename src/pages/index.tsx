@@ -24,6 +24,15 @@ export default function Home() {
     setCurrentPosition(position);
   }, []);
 
+  const dispatch = useDispatch()
+  const selector:any = useSelector((state) => (state))
+
+  useEffect(() => {
+    var token = localStorage.getItem('token')
+    if (!token) return
+    dispatch(signInAction({uid:"0000", username:"あいうえお"}))
+  }, [])
+  
 
   useEffect(() => {
     window.addEventListener('scroll', scrollEvent);
@@ -32,8 +41,6 @@ export default function Home() {
     };
   }, [scrollEvent]);
 
-  const dispatch = useDispatch()
-  const selector:any = useSelector((state) => (state))
   const users = getUser(selector)
   
   return (

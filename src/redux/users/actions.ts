@@ -4,8 +4,8 @@ export const signInAction = (userState: any) => {
     type: 'SIGN_IN',
     payload: {
       isSignedIn: true,
-      icon: '',
-      uid: userState.uid,
+      icon: userState.icon,
+      token: userState.token,
       username: userState.username,
     },
   }
@@ -18,7 +18,7 @@ export const signOutAction = () => {
     payload: {
       isSignedIn: false,
       icon: '',
-      uid: '',
+      token: '',
       username: '',
     },
   }
