@@ -3,16 +3,17 @@ import React from "react";
 
 interface Props {
   value: string;
-  onClick: () => void;
+  onClick: any;
 }
 
 const BlackButton = React.memo((props:Props) => {
   const { value, onClick } = props;
   return (
     <Button 
-      sx={[{mt:"20px" ,backgroundColor:"black"},()=>({'&:hover': {backgroundColor:"black"}})]}  
+      sx={[{my:"10px" ,backgroundColor:"black"},()=>({'&:hover': {backgroundColor:"black"}})]}  
       variant="contained" 
       size="large"
+      fullWidth
       onClick={onClick}
     >
       {value}

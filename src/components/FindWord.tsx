@@ -24,10 +24,6 @@ const FindWord = React.memo(() => {
 
 
   const createHistory = () => {
-    var token = localStorage.getItem("token")
-    if (token === null) {
-      return
-    }
     const payloadWord = {
       word: text,
       token: localStorage.getItem("token")
@@ -38,29 +34,30 @@ const FindWord = React.memo(() => {
     const funcErrorWord = (response: any) => {
       console.log(response)
     }
-    apiAccess("WORD", funcSuccessWord, funcErrorWord, payloadWord)
+    apiAccess("HISTORY", funcSuccessWord, funcErrorWord, payloadWord)
   }
 
   const onSubmit = useCallback(() => {
-    setWordData([])
-    setLoading(true)
-    setTweetList([])
-    const payload = {
-      id: text
-    };
+    createHistory()
+    // setWordData([])
+    // setLoading(true)
+    // setTweetList([])
+    // const payload = {
+    //   id: text
+    // };
 
-    const funcSuccess = (response: any) => {
-      setTweetList(response.data.tweetList)
-      setWordData(response.data.counter)
-      setLoading(false)
-      createHistory()
-    }
+    // const funcSuccess = (response: any) => {
+    //   setTweetList(response.data.tweetList)
+    //   setWordData(response.data.counter)
+    //   setLoading(false)
+    //   createHistory()
+    // }
 
-    const funcError = (response: any) => {
-      console.log(response)
-      setLoading(false)
-    }
-    apiAccess('CHECK', funcSuccess, funcError, payload);
+    // const funcError = (response: any) => {
+    //   console.log(response)
+    //   setLoading(false)
+    // }
+    // apiAccess('CHECK', funcSuccess, funcError, payload);
   },[text])
 
   useEffect(() => {

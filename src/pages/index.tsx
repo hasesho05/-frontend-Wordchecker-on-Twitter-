@@ -59,7 +59,10 @@ export default function Home() {
   
   return (
     <>
-    {isHeaderShown && <Header />}
+      <Box sx={{backgroundSize:"contain", backgroundPosition:"center",background: "linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/images/system/background.jpg')", padding: "0", height:"50vh" }}>
+        <Header />
+      </Box>
+      {users}
       <Box sx={{mx:"auto", width:"100%", maxWidth:"1000px", backgroundColor:"#f2f2f2", height:"100%"}}>
         <Box sx={{mt:"20px", padding: {xs: "20px", sm:"50px"}}}>
           {mode === 0 && <FindWord/> }

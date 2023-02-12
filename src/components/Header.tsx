@@ -10,9 +10,14 @@ import HistoryIcon from '@mui/icons-material/History';
 import { Container } from "semantic-ui-react";
 import { getDownloadURL, ref } from "firebase/storage";
 import { firestorage } from "../config";
+import Image from "next/image";
 
 export default function Header() {
   const dispatch = useDispatch()
+  const selector:any = useSelector((state) => (state))
+  const isSignedIn = getSignedIn(selector)
+  const icon = getIcon(selector)
+
   const [signInModalopen, setSignInModalopen] = useState(false)
   const [signUpModalopen, setSignUpModalopen] = useState(false)
   const [historyModalOpen, setHistoryModalOpen] = useState(false)
@@ -42,20 +47,11 @@ export default function Header() {
     handleClose();
   }
 
-  const selector:any = useSelector((state) => (state))
-  const isSignedIn = getSignedIn(selector)
-  const icon = getIcon(selector)
 
   useEffect(() => {
-    if (!icon) return
-    const gsReference = ref(firestorage, icon);
-    getDownloadURL(gsReference)
-    .then((url) => {
-      console.log(url);
-      setImage(url);
-    })
-    .catch((err) => console.log(err));
+    console.log(icon);
   }, [icon])
+    
   
 
   const ProfileMenu = () => {
@@ -76,9 +72,9 @@ export default function Header() {
 
   return (
     <Box flexGrow={1}>
-      <AppBar position="static" sx={{backgroundColor:"#598B2C"}}>
+      <AppBar position="static" sx={{backgroundColor:"inherit"}}>
         <Toolbar sx={{display:"flex", justifyContent:"space-between"}}>
-          <Typography sx={{fontWeight:"bold", fontSize:20}}>WordChecker</Typography>
+          <Image src="/images/logo/logo_light.png" alt="logo" width={170} height={40} style={{cursor:"pointer"}} onClick={()=>window.location.href="/"}/>
           {isSignedIn ? 
           <Container sx={{display:"flex"}}>
             <IconButton
@@ -91,12 +87,12 @@ export default function Header() {
             <IconButton
               onClick={handleClick}
               size="small"
-              sx={{ ml:"auto", mr:1, backgroundColor:"gray" }}
+              sx={{ ml:"auto", mr:1}}
               aria-controls={open ? 'account-menu' : undefined}
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
             >
-              <Avatar src={image}/>
+              <Avatar src={icon}/>
             </IconButton>
 
           </Container>
@@ -128,6 +124,7 @@ export default function Header() {
           setHistoryModalOpen={setHistoryModalOpen}
         />
       }
+      
     </Box>
   );
 }

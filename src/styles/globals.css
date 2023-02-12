@@ -6,4 +6,15 @@ body {
   margin: 0;
   font-family: 'Noto Sans', sans-serif;
   background-color: #f2f2f2;
+  
+}
+
+.MuiButtonBase-root {
+  z-index: 0;
+}
+
+.MuiBox-root {
+  z-index: 100;
+  background-size: cover;
+  background-position: center;
 }

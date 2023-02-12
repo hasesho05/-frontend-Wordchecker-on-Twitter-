@@ -269,26 +269,68 @@ interface HistoryModal {
   setHistoryModalopen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+const style2 = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
+
 export const HistoryModal = React.memo((props: any) => {
-  const {historyModalopen, setHistoryModalopen } = props;
-  const handleClose = () => setHistoryModalopen(false);
+  const {historyModalopen, setHistoryModalOpen } = props;
+  const [history, setHistory] = useState<any>([]);
+
+  const handleClose = () =>  {
+    setHistoryModalOpen(false);
+  }
+
+  const getHistory = () => {
+    const payload = {
+      token: localStorage.getItem("token"),
+    }
+
+    const funcSuccess = (response: any) => {
+      if (response.data.status === "ok") {
+        console.log("get history success");
+        console.log(response.data.data);
+        setHistory(response.data.data);
+      }
+    }
+    const funcError = (error: any) => {
+      console.log("get history error: ", error);
+    }
+    apiAccess('HISTORY_LIST', funcSuccess, funcError, payload);
+  }
+
+  useEffect(() => {
+    getHistory();
+  }, [historyModalopen])
 
   return (
-  <Box>
-    <Modal
-      open={historyModalopen}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
+    <Box sx={{position:"absolute", height:"100vh", width:"100vw"}} onClick={handleClose}>
       <Box sx={style}>
         <Stack spacing={3}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
           履歴
         </Typography>
+        <Box sx={{height:"100%", width:"100%", overflow:"scroll"}}>
+          {history.map((item: any) => {
+            return (
+              <Box sx={{border:"1px solid black", padding:"10px", margin:"10px"}}>
+                <Typography>{item.title}</Typography>
+                <Typography>{item.created_at}</Typography>
+              </Box>
+            )
+          })}
+        </Box>
         </Stack>
       </Box>
-    </Modal>
   </Box>
   )
 })
