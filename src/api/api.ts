@@ -12,6 +12,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development'){
 export const urls = {
   signup: api_host + '/user/signup',
   signin: api_host + '/user/signin',
+  withdrawal: api_host + '/user/withdrawal',
   authorization: api_host + '/user/authorization',
   history: api_host + '/history',
   history_list: api_host + '/history/list',
@@ -22,6 +23,7 @@ export const urls = {
 export const actionList = {
   SIGNUP: 'SIGNUP',
   SIGNIN: 'SIGNIN',
+  WITHDRAWAL: 'WITHDRAWAL',
   HISTORY: 'HISTORY',
   HISTORY_LIST: 'HISTORY_LIST',
   AUTHORIZATION: 'AUTHORIZATION',
@@ -66,6 +68,18 @@ function apiAccess(action: string, funcSuccess: Function, funcError: Function, p
         funcError(e);
       });
       break;
+
+    case actionList.WITHDRAWAL:
+      axios({
+        method: 'post',
+        url: urls.withdrawal,
+        data: payload,
+        headers: { "content-type": 'application/json', }
+      }).then((response) => {
+        funcSuccess(response);
+      }).catch((e) => {
+        funcError(e);
+      });
     
     case actionList.AUTHORIZATION:
       axios({

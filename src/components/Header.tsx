@@ -11,9 +11,11 @@ import { Container } from "semantic-ui-react";
 import { getDownloadURL, ref } from "firebase/storage";
 import { firestorage } from "../config";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 export default function Header() {
   const dispatch = useDispatch()
+  const router = useRouter()
   const selector:any = useSelector((state) => (state))
   const isSignedIn = getSignedIn(selector)
   const icon = getIcon(selector)
@@ -24,6 +26,12 @@ export default function Header() {
   const [image, setImage] = useState<string>('')
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
+  useEffect(() => {
+    console.log(icon);
+    
+  }, [])
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -48,12 +56,6 @@ export default function Header() {
   }
 
 
-  useEffect(() => {
-    console.log(icon);
-  }, [icon])
-    
-  
-
   const ProfileMenu = () => {
     return (
       <Menu
@@ -65,7 +67,9 @@ export default function Header() {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
+        <MenuItem onClick={handleSignOut}>プロフィール</MenuItem>
+        <MenuItem onClick={handleSignOut}>ログアウト</MenuItem>
+        <MenuItem onClick={handleSignOut}>退会</MenuItem>
       </Menu>
     )
   }
@@ -79,7 +83,7 @@ export default function Header() {
           <Container sx={{display:"flex"}}>
             <IconButton
               size="small"
-              sx={{ ml:1, mr:1 }}
+              sx={{ ml:1, mr:1}}
               onClick={() => setHistoryModalOpen(true)}
             >
               <HistoryIcon sx={{fontSize:"40px", color:"white"}}/>
@@ -87,19 +91,19 @@ export default function Header() {
             <IconButton
               onClick={handleClick}
               size="small"
-              sx={{ ml:"auto", mr:1}}
+              sx={{ ml:"auto", mr:1, fontSize:"40px"}}
               aria-controls={open ? 'account-menu' : undefined}
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
             >
-              <Avatar src={icon}/>
+              <Avatar src={icon} sx={{backgroundColor:"white"}}/>
             </IconButton>
 
           </Container>
           :
             <Box sx={{display: "flex", ml:"auto"}}>
               <GreenButton value={"ログイン"} onClick={handleSignIn}/>
-              <GreenButton value={"新規登録"} onClick={handleSignUp}/>
+              <GreenButton value={"新規登録"} onClick={()=>router.push("/signup")}/>
             </Box>
           }
         </Toolbar>

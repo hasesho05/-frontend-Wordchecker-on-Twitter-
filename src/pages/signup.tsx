@@ -97,11 +97,13 @@ export default function SignInSide() {
           }
           handleSignup(userInitialData);
           localStorage.setItem("token", uid);
-          dispatch(signInAction({icon:imageURL, token:uid}))
-          console.log(imageURL);
-          
-          router.push("/")
+          dispatch(signInAction({username: username, icon: imageURL}))
         }})
+      .then(() => {
+        setTimeout(() => {
+        router.push("/")
+        }, 1000)
+      })
       .catch((error) => {
         const errorCode = error.code;
         if (errorCode === "auth/weak-password") {
@@ -130,6 +132,7 @@ export default function SignInSide() {
     getDownloadURL(gsReference)
     .then((url) => {
       setImageURL(url);
+      console.log(url);
     })
     .catch((err) => console.log(err));
   },[imagePath])

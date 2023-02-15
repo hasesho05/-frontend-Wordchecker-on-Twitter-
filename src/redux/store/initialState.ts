@@ -4,6 +4,11 @@ const initialState = {
     isSignedIn: false,
     token: '',
     username: '',
+  },
+  message: {
+    message: '',
+    type: 'success',
+    open: false,
   }
 }
 
