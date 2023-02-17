@@ -1,8 +1,8 @@
-import { createSelector } from 'reselect';
+// import { createSelector } from 'reselect';
 
-const messageSelector = (state:any) => state.message;
+// const messageSelector = (state:any) => state.message;
 
-export const createMessage = createSelector(
-  [messageSelector],
-  state => state.message
-)
+// export const createMessage = createSelector(
+//   [messageSelector],
+//   state => state.message.createMessage
+// )

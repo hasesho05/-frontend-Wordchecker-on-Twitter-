@@ -66,14 +66,16 @@ export default function SignInSide() {
 
   function handleSignup(userInitialData: UserInitialData){
     const payload = {
-      token: userInitialData.token,
       username: username,
       email: userInitialData.email,
       password: userInitialData.password,
-      icon: userInitialData.icon,
+      user_icon: userInitialData.icon,
     }
     const funcSuccess = (response: any) => {
       console.log("signup success");
+      localStorage.setItem('token', response.data.data.token);
+      dispatch(signInAction({icon: response.data.data.user_icon, token: response.data.data.token}));
+      router.push('/');
     }
     const funcError = (error: any) => {
       console.log("signup error: ", error);
@@ -83,36 +85,24 @@ export default function SignInSide() {
 
   const handleSubmit = (e:any) => {
     e.preventDefault();
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(result => {
-        const user = result.user
-        if(user) {
-          const uid = user.uid
-          const userInitialData = {
-            token: uid,
-            username: username,
-            email: email,
-            icon: imageURL,
-            password: password,
-          }
-          handleSignup(userInitialData);
-          localStorage.setItem("token", uid);
-          dispatch(signInAction({username: username, icon: imageURL}))
-        }})
-      .then(() => {
-        setTimeout(() => {
-        router.push("/")
-        }, 1000)
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        if (errorCode === "auth/weak-password") {
-          setMessage("パスワードは6文字以上にしてください");
-        } else {
-          setMessage("そのメールアドレスは既に登録されています");
-        }
-      });
+    if (username === "" || email === "" || password === "") {
+      setMessage("入力されていない項目があります");
+      return;
     }
+    if (password.length < 6) {
+      setMessage("パスワードは6文字以上で入力してください");
+      return;
+    }
+    const userInitialData = {
+      token: "",
+      username: username,
+      email: email,
+      icon: imageURL,
+      password: password,
+    }
+
+    handleSignup(userInitialData);
+  }
 
   const getRandomImage = () => {
     listAll(storageRef).then(function(res) {

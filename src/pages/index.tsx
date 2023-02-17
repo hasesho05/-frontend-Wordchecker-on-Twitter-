@@ -11,7 +11,7 @@ import { getSignedIn, getUser } from '../redux/users/selector';
 import apiAccess from '../api/api';
 import { useRouter } from 'next/router';
 import FlashMessage from '../components/common/FlashMessage';
-import { createMessage } from '../redux/message/selector';
+// import { createMessage } from '../redux/message/selector';
 
 
 
@@ -20,7 +20,7 @@ export default function Home() {
   const selector:any = useSelector((state) => (state))
   const isSignedIn = getSignedIn(selector)
   const selector2:any = useSelector((state) => (state))
-  const open = createMessage(selector2)
+  // const open = createMessage(selector2)
   
 
   const [isHeaderShown, setIsHeaderShown] = useState(true);
@@ -40,19 +40,21 @@ export default function Home() {
     const payload = {
       token: token
     }
+    console.log(payload);
+    
     const funcSuccess = (response: any) => {
       dispatch(signInAction({username: response.data.data.username, icon: response.data.data.icon}))
     }
     const funcError = (error: any) => {
       console.log(error)
-      localStorage.removeItem('token')
     }
     apiAccess("AUTHORIZATION", funcSuccess, funcError, payload)
   },[])
 
   useEffect(() => {
-    if (isSignedIn) return
     var token = localStorage.getItem('token')
+    console.log(token);
+    
     if (!token) return
     getUserInfo(token)
   }, [])
@@ -79,7 +81,6 @@ export default function Home() {
           {mode === 1 && <GetUserInfo />}
         </Box>
       </Box>
-      {open && <FlashMessage message={message} severity={severity} open={open} setOpen={setOpen}/>}
     </>
   )
 }

@@ -6,23 +6,25 @@ export let api_host = '';
 
 // Dev mode
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development'){
-  api_host = 'http://localhost:8000';
+  api_host = 'http://localhost:8000/api';
 }
 
 export const urls = {
-  signup: api_host + '/user/signup',
-  signin: api_host + '/user/signin',
-  withdrawal: api_host + '/user/withdrawal',
-  authorization: api_host + '/user/authorization',
-  history: api_host + '/history',
-  history_list: api_host + '/history/list',
-  check_user_id: api_host + '/userid',
+  signup: api_host + '/auth/signup/',
+  signin: api_host + '/auth/signin/',
+  profile_update: api_host + '/user/profile_update/',
+  withdrawal: api_host + '/user/withdrawal/',
+  authorization: api_host + '/auth/authenticated/',
+  history: api_host + '/history/',
+  history_list: api_host + '/history/list/',
+  check_user_id: api_host + '/userid/',
   check: api_host + '/',
 }
 
 export const actionList = {
   SIGNUP: 'SIGNUP',
   SIGNIN: 'SIGNIN',
+  PROFILE_UPDATE: 'PROFILE_UPDATE',
   WITHDRAWAL: 'WITHDRAWAL',
   HISTORY: 'HISTORY',
   HISTORY_LIST: 'HISTORY_LIST',
@@ -68,6 +70,19 @@ function apiAccess(action: string, funcSuccess: Function, funcError: Function, p
         funcError(e);
       });
       break;
+    
+    case actionList.PROFILE_UPDATE:
+      axios({
+        method: 'put',
+        url: urls.profile_update,
+        data: payload,
+        headers: { "content-type": 'multipart/form-data'},
+      }).then((response) => {
+        funcSuccess(response);
+      }).catch((e) => {
+        funcError(e);
+      });
+      break;
 
     case actionList.WITHDRAWAL:
       axios({
@@ -83,7 +98,7 @@ function apiAccess(action: string, funcSuccess: Function, funcError: Function, p
     
     case actionList.AUTHORIZATION:
       axios({
-        method: 'put',
+        method: 'post',
         url: urls.authorization,
         data: payload,
         headers: { "content-type": 'application/json', }

@@ -1,4 +1,5 @@
-import { AppBar, Toolbar, IconButton, Typography, Box, Avatar, Menu, MenuItem, Button } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Box, Avatar, Menu, MenuItem, Button } from "@mui/material";
+import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -83,15 +84,22 @@ export default function Header() {
           <Container sx={{display:"flex"}}>
             <IconButton
               size="small"
-              sx={{ ml:1, mr:1}}
+              sx={{ ml:1}}
               onClick={() => setHistoryModalOpen(true)}
             >
-              <HistoryIcon sx={{fontSize:"40px", color:"white"}}/>
+              <HistoryIcon sx={{fontSize:"30px", color:"white"}}/>
+            </IconButton>
+            <IconButton
+              size="small"
+              sx={{mr:1}}
+              onClick={() => setHistoryModalOpen(true)}
+            >
+              <AddToPhotosIcon sx={{fontSize:"30px", color:"white"}}/>
             </IconButton>
             <IconButton
               onClick={handleClick}
               size="small"
-              sx={{ ml:"auto", mr:1, fontSize:"40px"}}
+              sx={{ ml:"auto", mr:1, fontSize:"30px"}}
               aria-controls={open ? 'account-menu' : undefined}
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
