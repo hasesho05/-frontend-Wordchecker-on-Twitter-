@@ -14,6 +14,7 @@ export const urls = {
   signin: api_host + '/auth/signin/',
   profile_update: api_host + '/user/profile_update/',
   withdrawal: api_host + '/user/withdrawal/',
+  get_new_posts: api_host + '/userpost/get_new_posts/',
   authorization: api_host + '/auth/authenticated/',
   history: api_host + '/history/',
   history_list: api_host + '/history/list/',
@@ -26,6 +27,7 @@ export const actionList = {
   SIGNIN: 'SIGNIN',
   PROFILE_UPDATE: 'PROFILE_UPDATE',
   WITHDRAWAL: 'WITHDRAWAL',
+  GET_NEW_POSTS: 'GET_NEW_POSTS',
   HISTORY: 'HISTORY',
   HISTORY_LIST: 'HISTORY_LIST',
   AUTHORIZATION: 'AUTHORIZATION',
@@ -109,6 +111,14 @@ function apiAccess(action: string, funcSuccess: Function, funcError: Function, p
       });
       break;
 
+    case actionList.GET_NEW_POSTS:
+      axios.get(urls.get_new_posts + search)
+      .then((response) => {
+        funcSuccess(response);
+      }).catch((e) => {
+        funcError(e);
+      });
+      break;
     
     case actionList.HISTORY:
       axios({

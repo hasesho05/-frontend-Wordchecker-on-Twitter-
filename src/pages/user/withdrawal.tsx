@@ -7,9 +7,9 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import apiAccess from '../api/api';
+import apiAccess from '../../api/api';
 import { useCallback, useEffect, useState } from 'react';
-import BlackButton from '../components/common/BlackButton';
+import BlackButton from '../../components/common/BlackButton';
 
 const theme = createTheme();
 

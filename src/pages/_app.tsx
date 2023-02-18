@@ -7,12 +7,9 @@ import { CacheProvider, EmotionCache } from '@emotion/react';
 import theme from '../theme';
 import createEmotionCache from '../createEmotionCathe';
 import '../styles/globals.css'
-import createStore from '../redux/store/store';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { signInAction } from '../redux/users/actions';
-import { useEffect } from 'react';
-
+import {
+  RecoilRoot,
+} from 'recoil';
 const clientSideEmotionCache = createEmotionCache();
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
@@ -20,7 +17,7 @@ interface MyAppProps extends AppProps {
 
 function App(props: MyAppProps) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-  const store = createStore();
+
   return (
     <CacheProvider value={emotionCache}>
       <Head>
@@ -28,9 +25,9 @@ function App(props: MyAppProps) {
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Provider store={store}>
-          <Component {...pageProps} />
-        </Provider>
+          <RecoilRoot>
+            <Component {...pageProps} />
+          </RecoilRoot>
       </ThemeProvider>
     </CacheProvider>
   )

@@ -17,7 +17,6 @@ import { auth, firestorage, storageRef } from '../config';
 import { useCallback, useEffect, useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
-import { signInAction } from '../redux/users/actions';
 import { useRouter } from 'next/router';
 import TwitterLoginButton from '../components/common/TwitterLoginButton';
 import BlackButton from '../components/common/BlackButton';
@@ -74,7 +73,6 @@ export default function SignInSide() {
     const funcSuccess = (response: any) => {
       console.log("signup success");
       localStorage.setItem('token', response.data.data.token);
-      dispatch(signInAction({icon: response.data.data.user_icon, token: response.data.data.token}));
       router.push('/');
     }
     const funcError = (error: any) => {
