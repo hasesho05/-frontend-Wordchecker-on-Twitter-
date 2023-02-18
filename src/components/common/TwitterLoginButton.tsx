@@ -3,17 +3,14 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import { auth, twitterProvider } from '../../config';
 import { signInWithPopup, TwitterAuthProvider } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
-import { signInAction } from '../../redux/users/actions';
 import apiAccess from '../../api/api';
 import React from 'react';
 
 
 const TwitterLoginButton = React.memo(() => { 
-  const dispatch = useDispatch();
   const TwitterLogin = () => {
     signInWithPopup(auth, twitterProvider).then( async (result) => {
       const user = result.user
-      dispatch(signInAction({token:user.uid, username:user.displayName, icon:user.photoURL}))
       localStorage.setItem('token', user.uid)
       const userInitialData = {
         token: user.uid,

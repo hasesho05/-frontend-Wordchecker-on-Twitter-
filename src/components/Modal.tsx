@@ -5,14 +5,12 @@ import { useDispatch } from "react-redux";
 import BlackButton from "./common/BlackButton";
 import TextInput from "./common/TextInput";
 import TwitterLoginButton from "./common/TwitterLoginButton";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { serverTimestamp } from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, firestorage, storageRef } from "../config"
 import FlashMessage from "./common/FlashMessage";
 import { getDownloadURL, listAll } from "firebase/storage";
 import { ref } from "firebase/storage";
 import apiAccess from "../api/api";
-import { signInAction } from "../redux/users/actions";
 
 interface SignUpModal {
   signUpModalopen: boolean;
@@ -219,7 +217,6 @@ export const SignInModal = React.memo((props: SingInModal) => {
       if (response.data.status === "ok") {
         console.log("signin success");
         localStorage.setItem("token", response.data.data.token);
-        dispatch(signInAction({username: response.data.data.username, icon: response.data.data.icon}))
         setMessage("ログインしました。");
         setSeverity("success");
         setOpen(true);
@@ -255,7 +252,7 @@ export const SignInModal = React.memo((props: SingInModal) => {
           <TextInput label={"パスワード"} fullWidth={true} multiline={false} required={true} rows={1} value={password} type={"password"} onChange={inputPassword}/>
           <BlackButton value={"メールアドレスでログイン"} onClick={handleSubmit}/>
         </FormControl>
-        <TwitterLoginButton handleClose={handleClose} setMessage={setMessage} setSeverity={setSeverity} setOpen={setOpen}/>
+
         </Stack>
       </Box>
     </Modal>

@@ -1,25 +1,21 @@
-import { AppBar, Toolbar, IconButton, Box, Avatar, Menu, MenuItem, Button } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Box, Avatar, Menu, MenuItem, Button, Tooltip, Badge } from "@mui/material";
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { signOutAction } from "../redux/users/actions";
-import { getIcon, getSignedIn, getUser } from "../redux/users/selector";
+import { useCallback, useEffect, useState } from "react";
 import GreenButton from "./common/GreenButton";
 import { HistoryModal, SignInModal, SignUpModal } from "./Modal";
 import HistoryIcon from '@mui/icons-material/History';
 import { Container } from "semantic-ui-react";
-import { getDownloadURL, ref } from "firebase/storage";
-import { firestorage } from "../config";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import apiAccess from "../api/api";
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import Link from "next/link";
+import { useRecoilState } from "recoil";
+import { userStatusState } from "../status/userstatus";
 
-export default function Header() {
-  const dispatch = useDispatch()
+
+export default function Header(props: any) {
   const router = useRouter()
-  const selector:any = useSelector((state) => (state))
-  const isSignedIn = getSignedIn(selector)
-  const icon = getIcon(selector)
 
   const [signInModalopen, setSignInModalopen] = useState(false)
   const [signUpModalopen, setSignUpModalopen] = useState(false)
@@ -28,11 +24,6 @@ export default function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  useEffect(() => {
-    console.log(icon);
-    
-  }, [])
-
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -40,10 +31,6 @@ export default function Header() {
     setAnchorEl(null);
   };
 
-  const handleSignUp = () => {
-    setSignUpModalopen(true)
-    handleClose();
-  }
 
   const handleSignIn = () => {
     setSignInModalopen(true)
@@ -52,9 +39,35 @@ export default function Header() {
 
   const handleSignOut = () => {
     localStorage.removeItem('token')
-    dispatch(signOutAction())
     handleClose();
   }
+
+
+  const [userStatus, setUserStatus] = useRecoilState(userStatusState)
+
+  const getAuth = useCallback((token: string) => {
+    const payload = {
+      token: token
+    }
+    const funcSuccess = (response: any) => {
+      setUserStatus({
+        isSignedIn: true,
+        username: response.data.data.username,
+        icon: response.data.data.user_icon,
+      })
+    }
+    const funcError = (error: any) => {
+      console.log(error)
+    }
+    apiAccess("AUTHORIZATION", funcSuccess, funcError, payload)
+  },[])
+
+  useEffect(() => {
+    var token = localStorage.getItem('token')
+    if (!token) return
+    if (userStatus.isSignedIn) return
+    getAuth(token)
+  }, [])
 
 
   const ProfileMenu = () => {
@@ -68,9 +81,24 @@ export default function Header() {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleSignOut}>プロフィール</MenuItem>
+      <Box sx={{minWidth:"300px"}}>
+        <Box sx={{display:"flex", justifyContent:"end"}}>
+        <Tooltip className="ml-auto" sx={{ marginRight: "1rem", color: "#979797", cursor: "pointer" }} title="Notification">
+          <Badge color="secondary" >
+            <NotificationsNoneIcon />
+          </Badge>
+        </Tooltip>
+        </Box>
+        <Box sx={{display:"flex", justifyContent:"center"}}>
+          <Avatar src={props.request?.user.icon} sx={{width:"50px", height:"50px", ml:"10px", mr:"10px"}}/>
+        </Box>
+        <Link href="/">
+          <MenuItem onClick={handleSignOut}>ログアウト</MenuItem>
+        </Link>
         <MenuItem onClick={handleSignOut}>ログアウト</MenuItem>
         <MenuItem onClick={handleSignOut}>退会</MenuItem>
+
+      </Box>
       </Menu>
     )
   }
@@ -80,7 +108,7 @@ export default function Header() {
       <AppBar position="static" sx={{backgroundColor:"inherit"}}>
         <Toolbar sx={{display:"flex", justifyContent:"space-between"}}>
           <Image src="/images/logo/logo_light.png" alt="logo" width={170} height={40} style={{cursor:"pointer"}} onClick={()=>window.location.href="/"}/>
-          {isSignedIn ? 
+          {userStatus.isSignedIn ? 
           <Container sx={{display:"flex"}}>
             <IconButton
               size="small"
@@ -104,7 +132,7 @@ export default function Header() {
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
             >
-              <Avatar src={icon} sx={{backgroundColor:"white"}}/>
+              <Avatar src={props.request?.user.icon} />
             </IconButton>
 
           </Container>
