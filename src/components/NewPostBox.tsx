@@ -7,7 +7,10 @@ import Loading from "./common/Loading/Loading";
 
 import Post from "./common/Post";
 
-const NewPostBox = () => {
+
+
+const NewPostBox = (props:any) => {
+  const { request } = props;
   const [isLoading, setIsLoading] = useState(true)
   const [newPosts, setNewPosts] = useState([])
   
@@ -34,7 +37,7 @@ const NewPostBox = () => {
       :
         <>
         {newPosts.map((post: any) => (
-          <Post post={post}/>
+          <Post post={post} request={request}/>
         ))}
         </>
       }

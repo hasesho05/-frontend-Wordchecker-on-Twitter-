@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, Modal, Typography } from "@mui/material";
+import { Avatar, Box, Button, Container, FormControl, Modal, TextField, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -11,6 +11,8 @@ import FlashMessage from "./common/FlashMessage";
 import { getDownloadURL, listAll } from "firebase/storage";
 import { ref } from "firebase/storage";
 import apiAccess from "../api/api";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { userStatusState } from "../status/userstatus";
 
 interface SignUpModal {
   signUpModalopen: boolean;
@@ -24,15 +26,15 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: 400,
   bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
+  border: '1px solid #000',
+  boxShadow: "1px 1px 1px 1px gray",
   p: 4,
 };
 
 export const SignUpModal = React.memo((props: SignUpModal) => {
   const {signUpModalopen, setSignUpModalopen} = props;
   const handleClose = () => setSignUpModalopen(false);
-  const dispatch = useDispatch();
+  const userInfo = useRecoilValue(userStatusState)
 
   const [severity, setSeverity] = useState<"error" | "success" | "info" | "warning">("success");
   const [message, setMessage] = useState<string>("");
@@ -174,7 +176,6 @@ export const SignUpModal = React.memo((props: SignUpModal) => {
             <TextInput label={"パスワード(確認)"} fullWidth={true} multiline={false} required={true} rows={1} value={confirmPassword} type={"password"} onChange={inputConfirmPassword}/>
             <BlackButton value={"メールアドレスで登録"} onClick={handleSubmit}/>
           </FormControl>
-          <TwitterLoginButton handleClose={handleClose} setMessage={setMessage} setSeverity={setSeverity} setOpen={setOpen}/>
           </Stack>
         </Box>
       </Modal>
@@ -189,13 +190,13 @@ interface SingInModal {
 }
 
 export const SignInModal = React.memo((props: SingInModal) => {
-  const dispatch = useDispatch();
   const {signInModalopen, setSignInModalopen } = props;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [severity, setSeverity] = useState<"error" | "success" | "info" | "warning">("success");
   const [message, setMessage] = useState<string>("");
   const [open, setOpen] = useState(false);
+  const [userInfo, setUserInfo] = useRecoilState(userStatusState);
 
   const handleClose = () => setSignInModalopen(false);
 
@@ -214,9 +215,10 @@ export const SignInModal = React.memo((props: SingInModal) => {
     }
 
     const funcSuccess = (response: any) => {
-      if (response.data.status === "ok") {
+      if (response.data.status === "success") {
         console.log("signin success");
         localStorage.setItem("token", response.data.data.token);
+        setUserInfo({id: response.data.data.id, username: response.data.data.username, icon: response.data.data.icon, isSignedIn: true})
         setMessage("ログインしました。");
         setSeverity("success");
         setOpen(true);
@@ -231,7 +233,7 @@ export const SignInModal = React.memo((props: SingInModal) => {
       setSeverity("error");
       setOpen(true);
     }
-    apiAccess('SIGNIN', funcSuccess, funcError, payload);
+    apiAccess('LOGIN', funcSuccess, funcError, payload);
   }
 
   return (
@@ -328,6 +330,59 @@ export const HistoryModal = React.memo((props: any) => {
         </Box>
         </Stack>
       </Box>
+  </Box>
+  )
+})
+
+
+interface AddModal {
+  addModalopen: boolean;
+  setAddModalopen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const AddModal = React.memo((props: AddModal) => {
+  const { addModalopen, setAddModalopen } = props;
+
+  const handleClose = () => setAddModalopen(false);
+
+  const style = {
+    position: 'absolute' as 'absolute',
+    top: '30%',
+    left: '50%',
+    transform: 'translate(-50%)',
+    width: 350,
+    height: 300
+  };
+
+  return (
+    <Box>
+    <Modal
+      open={addModalopen}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={[style, {backgroundColor:"inherit"}]}>
+        <Box sx={{display:"flex"}}>
+          <Box sx={{backdropFilter:"blur(1px)", mr:"10px"}}>
+            <Avatar sx={{borderRadius:"20%"}}/>
+          </Box>
+          <Box sx={{backgroundColor:"white", width:"100%", height:"100%"}}>
+            <TextField 
+              label="What's happening?"
+              rows={5}
+              multiline
+              fullWidth
+            />
+            <Button fullWidth sx={{color:"black", backgroundColor:"lightgray"}}>Upload Image</Button>
+            <Box sx={{p:2, display:"flex", justifyContent:"space-between"}}>
+              <Button sx={{border:"1px solid gray", borderRadius:"20px", color:"black", fontWeight:"bold"}}>閉じる</Button>
+              <Button sx={{border:"1px solid gray", borderRadius:"20px", color:"black", fontWeight:"bold"}}>投稿</Button>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    </Modal>
   </Box>
   )
 })

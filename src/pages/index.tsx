@@ -16,18 +16,12 @@ import Loading from '../components/common/Loading/Loading';
 
 
 
-export default function Home() {
+export default function Home(props: any) {
+  const { request } = props;
+  
   const [isHeaderShown, setIsHeaderShown] = useState(true);
   const [currentPosition, setCurrentPosition] = useState(0);
   const [mode, setMode] = useState<number>(0)
-  const [request, setRequest] = useState({
-    isLogin: false,
-    user: {
-      id: 0,
-      username: "",
-      icon: "",
-    }
-  })
   const headerHeight = 40;
 
   const scrollEvent = useCallback(() => {
@@ -39,28 +33,6 @@ export default function Home() {
 
   const [userInfo, setUserInfo] = useRecoilState(userStatusState)
 
-  const getAuth = useCallback((token: string) => {
-    const payload = {
-      token: token
-    }
-    const funcSuccess = (response: any) => {
-      setUserInfo({
-        isSignedIn: true,
-        username: response.data.data.username,
-        icon: response.data.data.user_icon,
-      })
-    }
-    const funcError = (error: any) => {
-      console.log(error)
-    }
-    apiAccess("AUTHORIZATION", funcSuccess, funcError, payload)
-  },[])
-
-  useEffect(() => {
-    var token = localStorage.getItem('token')
-    if (!token) return
-    getAuth(token)
-  }, [])
 
   useEffect(() => {
     console.log(userInfo)
@@ -106,7 +78,7 @@ export default function Home() {
             </Link>
           </Box>
           <Box sx={{mt:"150px",padding: {xs: "20px", sm:"20px"}}}>
-            {mode === 0 && <NewPostBox /> }
+            {mode === 0 && <NewPostBox/> }
             {mode === 1 && <Loading />}
             {mode === 2 && <FindWord/> }
           </Box>
