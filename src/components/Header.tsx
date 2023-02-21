@@ -1,8 +1,8 @@
 import { AppBar, Toolbar, IconButton, Box, Avatar, Menu, MenuItem, Button, Tooltip, Badge } from "@mui/material";
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import GreenButton from "./common/GreenButton";
-import { HistoryModal, SignInModal, SignUpModal } from "./Modal";
+import { AddModal, HistoryModal, SignInModal, SignUpModal } from "./Modal";
 import HistoryIcon from '@mui/icons-material/History';
 import { Container } from "semantic-ui-react";
 import Image from "next/image";
@@ -14,13 +14,15 @@ import { useRecoilState } from "recoil";
 import { userStatusState } from "../status/userstatus";
 
 
-export default function Header(props: any) {
+export const Header = React.memo((props: any) => {
+  console.log(props);
+  
   const router = useRouter()
-
+  const [userStatus, setUserStatus] = useRecoilState(userStatusState)
   const [signInModalopen, setSignInModalopen] = useState(false)
   const [signUpModalopen, setSignUpModalopen] = useState(false)
   const [historyModalOpen, setHistoryModalOpen] = useState(false)
-  const [image, setImage] = useState<string>('')
+  const [addModalOpen, setAddModalOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -31,44 +33,15 @@ export default function Header(props: any) {
     setAnchorEl(null);
   };
 
-
   const handleSignIn = () => {
     setSignInModalopen(true)
     handleClose();
   }
 
-  const handleSignOut = () => {
-    localStorage.removeItem('token')
-    handleClose();
-  }
-
-
-  const [userStatus, setUserStatus] = useRecoilState(userStatusState)
-
-  const getAuth = useCallback((token: string) => {
-    const payload = {
-      token: token
-    }
-    const funcSuccess = (response: any) => {
-      setUserStatus({
-        isSignedIn: true,
-        username: response.data.data.username,
-        icon: response.data.data.user_icon,
-      })
-    }
-    const funcError = (error: any) => {
-      console.log(error)
-    }
-    apiAccess("AUTHORIZATION", funcSuccess, funcError, payload)
-  },[])
-
-  useEffect(() => {
-    var token = localStorage.getItem('token')
-    if (!token) return
-    if (userStatus.isSignedIn) return
-    getAuth(token)
-  }, [])
-
+  // const handleSignOut = () => {
+  //   localStorage.removeItem('token')
+  //   handleClose();
+  // }
 
   const ProfileMenu = () => {
     return (
@@ -92,11 +65,13 @@ export default function Header(props: any) {
         <Box sx={{display:"flex", justifyContent:"center"}}>
           <Avatar src={props.request?.user.icon} sx={{width:"50px", height:"50px", ml:"10px", mr:"10px"}}/>
         </Box>
-        <Link href="/">
-          <MenuItem onClick={handleSignOut}>ログアウト</MenuItem>
+        <Link href="/user/edit">
+          <MenuItem >プロフィール編集</MenuItem>
         </Link>
-        <MenuItem onClick={handleSignOut}>ログアウト</MenuItem>
-        <MenuItem onClick={handleSignOut}>退会</MenuItem>
+        <MenuItem >ログアウト</MenuItem>
+        <Link href="/user/withdrawal">
+          <MenuItem>退会</MenuItem>
+        </Link>
 
       </Box>
       </Menu>
@@ -120,7 +95,7 @@ export default function Header(props: any) {
             <IconButton
               size="small"
               sx={{mr:1}}
-              onClick={() => setHistoryModalOpen(true)}
+              onClick={() => setAddModalOpen(true)}
             >
               <AddToPhotosIcon sx={{fontSize:"30px", color:"white"}}/>
             </IconButton>
@@ -164,8 +139,15 @@ export default function Header(props: any) {
           setHistoryModalOpen={setHistoryModalOpen}
         />
       }
+
+      {addModalOpen &&
+        <AddModal 
+          addModalopen={addModalOpen}
+          setAddModalopen={setAddModalOpen}
+        />
+      }
       
     </Box>
   );
-}
+})
 

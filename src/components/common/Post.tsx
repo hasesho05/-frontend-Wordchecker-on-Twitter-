@@ -5,17 +5,20 @@ import { useEffect, useState } from "react";
 import apiAccess from "../../api/api";
 
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import PostComment from "./PostComment";
+import { useRecoilValue } from "recoil";
+import { userStatusState } from "../../status/userstatus";
 
 interface Props {
   post: any;
+  request: any;
 }
 
 const Post = (props:Props) => {
-  const { post } = props;
+  const { post, request } = props;
+  const userStatus = useRecoilValue(userStatusState)
   const [isLiked, setIsLiked] = useState(false);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [comments, setComments] = useState<any[]>([]);
@@ -23,8 +26,8 @@ const Post = (props:Props) => {
 
   const addLike = () => {
     const payload = {
-      account_id: "",
       post_id: post.id,
+      account_id: request.user.id,
     }
 
     const funcSuccess = (response: any) => {
@@ -40,7 +43,7 @@ const Post = (props:Props) => {
 
   const removeLike = () => {
     const payload = {
-      account_id: "",
+      account_id: request.user.id,
       post_id: post.id,
     }
     const funcSuccess = (response: any) => {
@@ -56,6 +59,9 @@ const Post = (props:Props) => {
   const submitComment = () => {
 
   }
+  useEffect(() => {
+    let id = userStatus.id
+  }, [post])
 
   return (
     <Box sx={{mb:"20px", backgroundColor:"rgb(34,34,34)"}}>

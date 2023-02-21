@@ -12,14 +12,12 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import apiAccess from '../api/api';
-import { getDownloadURL, listAll, ref } from 'firebase/storage';
-import { auth, firestorage, storageRef } from '../config';
-import { useCallback, useEffect, useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { useDispatch } from 'react-redux';
+import { useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
 import TwitterLoginButton from '../components/common/TwitterLoginButton';
 import BlackButton from '../components/common/BlackButton';
+import { useRecoilState } from 'recoil';
+import { userStatusState } from '../status/userstatus';
 
 function Copyright(props: any) {
   return (
@@ -34,12 +32,11 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignInSide() {
-  const dispatch = useDispatch();
   const router = useRouter();
+  const [userInfo, setUserInfo] = useRecoilState(userStatusState)
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [imagePath, setImagePath] = useState("");
   const [imageURL, setImageURL] = useState("");
   const [message, setMessage] = useState("");
 
@@ -68,15 +65,22 @@ export default function SignInSide() {
       username: username,
       email: userInitialData.email,
       password: userInitialData.password,
-      user_icon: userInitialData.icon,
+      user_icon: "",
     }
     const funcSuccess = (response: any) => {
       console.log("signup success");
       localStorage.setItem('token', response.data.data.token);
+      setUserInfo({
+        id: response.data.data.id,
+        icon: "",
+        username: username,
+        isSignedIn: true,
+      })
       router.push('/');
     }
     const funcError = (error: any) => {
       console.log("signup error: ", error);
+      setMessage(error.response.data.message)
     }
     apiAccess('SIGNUP', funcSuccess, funcError, payload);
   }
@@ -102,28 +106,6 @@ export default function SignInSide() {
     handleSignup(userInitialData);
   }
 
-  const getRandomImage = () => {
-    listAll(storageRef).then(function(res) {
-    let N = Math.floor(Math.random()*res.items.length)
-    setImagePath(res.items[N].fullPath)
-  }).catch(function(error) {
-    console.log(error);
-  })} 
-
-  useEffect(() => {
-    getRandomImage()
-  }, [])
-
-  useEffect(() => {
-    if (imagePath === "" || imagePath === null) return;
-    const gsReference = ref(firestorage, "gs://wordchecker-a26d8.appspot.com/" + imagePath);
-    getDownloadURL(gsReference)
-    .then((url) => {
-      setImageURL(url);
-      console.log(url);
-    })
-    .catch((err) => console.log(err));
-  },[imagePath])
   
   return (
     <ThemeProvider theme={theme}>
