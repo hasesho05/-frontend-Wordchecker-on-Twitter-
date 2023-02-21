@@ -130,7 +130,7 @@ const FindWord = React.memo(() => {
   },[text])
 
   return (
-    <>
+    <Box sx={{border:"1px solid gray", backgroundColor:"gray"}}>
       <Stack spacing={3}>
         <FormControl>
           <TextInput 
@@ -150,8 +150,8 @@ const FindWord = React.memo(() => {
           />
         </FormControl>
         {loading && 
-          <Box sx={{width:"100%"}}>
-            <CircularProgress sx={{ml:"250px",color:"gray"}}/>
+          <Box sx={{width:"100%", display:"flex"}}>
+            <CircularProgress sx={{mx:"auto",color:"gray"}}/>
           </Box>
         }
       </Stack>
@@ -165,7 +165,7 @@ const FindWord = React.memo(() => {
           </Box>
         ))}
       </Box>
-    </>
+    </Box>
   );
 })
 

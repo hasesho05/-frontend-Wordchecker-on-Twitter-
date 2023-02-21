@@ -10,15 +10,12 @@ import { useRouter } from "next/router";
 import apiAccess from "../api/api";
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import Link from "next/link";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilTransactionObserver_UNSTABLE, useRecoilValue } from "recoil";
 import { userStatusState } from "../status/userstatus";
 
 
 export const Header = React.memo((props: any) => {
-  console.log(props);
-  
   const router = useRouter()
-  const [userStatus, setUserStatus] = useRecoilState(userStatusState)
   const [signInModalopen, setSignInModalopen] = useState(false)
   const [signUpModalopen, setSignUpModalopen] = useState(false)
   const [historyModalOpen, setHistoryModalOpen] = useState(false)
@@ -38,10 +35,17 @@ export const Header = React.memo((props: any) => {
     handleClose();
   }
 
-  // const handleSignOut = () => {
-  //   localStorage.removeItem('token')
-  //   handleClose();
-  // }
+  const handleSignOut = () => {
+    localStorage.removeItem('token')
+    setUserStatus({
+      isLogin: false,
+      id:0,
+      icon:"",
+    })
+    handleClose();
+  }
+
+  const [userStatus, setUserStatus] = useRecoilState(userStatusState)
 
   const ProfileMenu = () => {
     return (
@@ -68,7 +72,7 @@ export const Header = React.memo((props: any) => {
         <Link href="/user/edit">
           <MenuItem >プロフィール編集</MenuItem>
         </Link>
-        <MenuItem >ログアウト</MenuItem>
+          <MenuItem onClick={handleSignOut}>ログアウト</MenuItem>
         <Link href="/user/withdrawal">
           <MenuItem>退会</MenuItem>
         </Link>
@@ -83,15 +87,9 @@ export const Header = React.memo((props: any) => {
       <AppBar position="static" sx={{backgroundColor:"inherit"}}>
         <Toolbar sx={{display:"flex", justifyContent:"space-between"}}>
           <Image src="/images/logo/logo_light.png" alt="logo" width={170} height={40} style={{cursor:"pointer"}} onClick={()=>window.location.href="/"}/>
-          {userStatus.isSignedIn ? 
+          <>
+          {userStatus?.isLogin ? 
           <Container sx={{display:"flex"}}>
-            <IconButton
-              size="small"
-              sx={{ ml:1}}
-              onClick={() => setHistoryModalOpen(true)}
-            >
-              <HistoryIcon sx={{fontSize:"30px", color:"white"}}/>
-            </IconButton>
             <IconButton
               size="small"
               sx={{mr:1}}
@@ -107,16 +105,19 @@ export const Header = React.memo((props: any) => {
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
             >
-              <Avatar src={props.request?.user.icon} />
+              <Avatar src={userStatus.icon} />
             </IconButton>
 
           </Container>
+          
           :
             <Box sx={{display: "flex", ml:"auto"}}>
+              <Button onClick={()=>console.log(userStatus)}>ボタン</Button>
               <GreenButton value={"ログイン"} onClick={handleSignIn}/>
               <GreenButton value={"新規登録"} onClick={()=>router.push("/signup")}/>
             </Box>
           }
+          </>
         </Toolbar>
       </AppBar>
       <ProfileMenu />
@@ -144,6 +145,7 @@ export const Header = React.memo((props: any) => {
         <AddModal 
           addModalopen={addModalOpen}
           setAddModalopen={setAddModalOpen}
+          request={props.request}
         />
       }
       

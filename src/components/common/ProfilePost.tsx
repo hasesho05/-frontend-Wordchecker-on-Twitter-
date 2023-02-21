@@ -1,25 +1,23 @@
-import { Avatar, Box, Button, IconButton, TextField, Typography } from "@mui/material";
-import { Container } from "@mui/system";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import apiAccess from "../../api/api";
+import { Container } from "semantic-ui-react";
 
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import IosShareIcon from '@mui/icons-material/IosShare';
-import PostComment from "./PostComment";
+import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { userStatusState } from "../../status/userstatus";
+import apiAccess from "../../api/api";
+import PostComment from "./PostComment";
 
 interface Props {
   post: any;
-  open?: boolean;
-  setOpen?: any;
-  setId?: any;
 }
 
-const Post = (props:Props) => {
-  const { post, setOpen, setId} = props;
+const ProfilePost = (props:Props) => {
+  const { post } = props;
+
   const [isLiked, setIsLiked] = useState(false);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [comments, setComments] = useState<any[]>([]);
@@ -96,42 +94,27 @@ const Post = (props:Props) => {
   }, [isCommentOpen])
 
   return (
-    <Box sx={{mb:"20px", backgroundColor:"rgb(34,34,34)"}}>
-      <Box sx={{display:"flex"}}>
-        <IconButton onClick={()=>{setOpen(true);setId(post.account.id)}}>
-          <Avatar src={post.account.user_icon} sx={{width:"60px", height:"60px", mb:"auto", borderRadius:"10px"}}/>
-        </IconButton>
-        <Box sx={{display:"flex"}}>
-          <Typography sx={{my:"auto"}}>{post.account.username}</Typography>
-          <Typography sx={{ml:"20px",my:"auto", color:"#00B8FF", fontWeight:"bold"}}>フォロー</Typography>
-        </Box>
+  <Box sx={{p:2, border:"1px solid darkgray"}}>
+    <Box sx={{position:"relative", minHeight:"300px"}}>
+      <Image src={post.image} fill alt="post_image" />
+    </Box>
+    <Box sx={{p:2}}>
+      <Typography sx={{color:"white", fontSize:"15px"}}>{post.content}</Typography>
+    </Box>
+    <Box sx={{display:"flex", gap:1, mr:2}}>
+      <Box sx={{ml:"auto", display:"flex", gap:0.5}}>
+        <ChatBubbleOutlineIcon sx={{width:"16px",cursor:"pointer"}} onClick={()=>setIsCommentOpen(!isCommentOpen)}/>
+        <Typography sx={{fontSize:"14px", mt:"1px"}}>{post?.comment?.length}</Typography>
       </Box>
-        <Box sx={{backgroundColor:"rgb(34,34,34)"}}>
-          <Box sx={{position:"relative", minHeight:{xs:"280px", ms:"500px", md:"500px", lg:"500px", xl:"500px"}, width:"100%", borderRadius:"50px"}}>
-            <Image src={post.image} alt={post.content} fill objectFit="cover" loading="eager" placeholder="blur" blurDataURL="blur.png"/>
-          </Box>
-          <Box>
-          <Box sx={{m:"20px"}}>
-            <Typography variant="h2" sx={{fontSize:"1.1rem", color:"white", lineHeight:"1.5rem"}}>
-              {post.content}
-            </Typography>
-          </Box>
-          <Container sx={{display:"flex", gap:1}}>
-            <Box sx={{ml:"auto", display:"flex", gap:0.5}}>
-              <ChatBubbleOutlineIcon sx={{width:"16px",cursor:"pointer"}} onClick={()=>setIsCommentOpen(!isCommentOpen)}/>
-              <Typography sx={{fontSize:"14px", mt:"1px"}}>{post?.comment?.length}</Typography>
-            </Box>
-            <Box sx={{display:"flex", gap:0.5}}>
-              <FavoriteIcon onClick={!isLiked ? addLike : removeLike} sx={isLiked ? {width:"16px",cursor:"pointer" ,color:"red"} : {width:"16px",cursor:"pointer"}}/>
-              <Typography sx={{fontSize:"14px", mt:"1px"}}>{post?.like?.length}</Typography>
-            </Box>
-            <Box sx={{display:"flex", gap:0.5}}>
-              <IosShareIcon sx={{width:"16px"}}/>
-            </Box>
-          </Container>
-        </Box>
-        </Box>
-        {isCommentOpen && 
+      <Box sx={{display:"flex", gap:0.5}}>
+        <FavoriteIcon onClick={!isLiked ? addLike : removeLike} sx={isLiked ? {width:"16px",cursor:"pointer" ,color:"red"} : {width:"16px",cursor:"pointer"}}/>
+        <Typography sx={{fontSize:"14px", mt:"1px"}}>{post?.like?.length}</Typography>
+      </Box>
+      <Box sx={{display:"flex", gap:0.5}}>
+        <IosShareIcon sx={{width:"16px"}}/>
+      </Box>
+    </Box>
+      {isCommentOpen && 
         <Box sx={{width:"100%"}}>
           <Box width={{width:"100%",display:"flex"}}>
             <TextField
@@ -157,9 +140,8 @@ const Post = (props:Props) => {
         ))}
         </Box>
       }
-
-    </Box>
+  </Box>
   );
 }
 
-export default Post;
+export default ProfilePost;

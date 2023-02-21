@@ -11,7 +11,10 @@ import FlashMessage from "./common/FlashMessage";
 import { getDownloadURL, listAll } from "firebase/storage";
 import { ref } from "firebase/storage";
 import apiAccess from "../api/api";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+
+import { resizeFile } from "../util/util";
+import { GrammarlyEditorPlugin } from '@grammarly/editor-sdk-react'
 import { userStatusState } from "../status/userstatus";
 
 interface SignUpModal {
@@ -34,7 +37,6 @@ const style = {
 export const SignUpModal = React.memo((props: SignUpModal) => {
   const {signUpModalopen, setSignUpModalopen} = props;
   const handleClose = () => setSignUpModalopen(false);
-  const userInfo = useRecoilValue(userStatusState)
 
   const [severity, setSeverity] = useState<"error" | "success" | "info" | "warning">("success");
   const [message, setMessage] = useState<string>("");
@@ -196,7 +198,7 @@ export const SignInModal = React.memo((props: SingInModal) => {
   const [severity, setSeverity] = useState<"error" | "success" | "info" | "warning">("success");
   const [message, setMessage] = useState<string>("");
   const [open, setOpen] = useState(false);
-  const [userInfo, setUserInfo] = useRecoilState(userStatusState);
+  const setUserStatus = useSetRecoilState(userStatusState);
 
   const handleClose = () => setSignInModalopen(false);
 
@@ -217,8 +219,14 @@ export const SignInModal = React.memo((props: SingInModal) => {
     const funcSuccess = (response: any) => {
       if (response.data.status === "success") {
         console.log("signin success");
-        localStorage.setItem("token", response.data.data.token);
-        setUserInfo({id: response.data.data.id, username: response.data.data.username, icon: response.data.data.icon, isSignedIn: true})
+        console.log(response.data.data);
+        
+        localStorage.setItem("token", response.data.token);
+        setUserStatus({
+          id: response.data.data.id,
+          icon: response.data.data.user_icon,
+          isLogin: true,
+        })
         setMessage("ログインしました。");
         setSeverity("success");
         setOpen(true);
@@ -338,21 +346,68 @@ export const HistoryModal = React.memo((props: any) => {
 interface AddModal {
   addModalopen: boolean;
   setAddModalopen: React.Dispatch<React.SetStateAction<boolean>>;
+  request: any
 }
 
 export const AddModal = React.memo((props: AddModal) => {
-  const { addModalopen, setAddModalopen } = props;
+  const { addModalopen, setAddModalopen} = props;
+  const [uploadedImages, setUploadedImages] = useState<any>({});
+  const [content, setContent] = useState<string>("");
+  const usetStatus = useRecoilValue(userStatusState);
 
   const handleClose = () => setAddModalopen(false);
 
+  const handleChangeFile = async(e: any) => {
+    const { name, files } = e.target;
+    const image = await resizeFile(files![0]);
+    setUploadedImages({ ...uploadedImages, [name]: image });
+  };
+
+  function preview(
+    id: string,
+    image_class: string,
+    name: string,
+    image_path: Blob | null
+  ) {
+    let style = image_class == 'cover-image' ? {width: '100%', height: '100%'}: {};
+
+    return (
+      <label htmlFor={id}>
+        {
+          image_path
+          ? <img src={URL.createObjectURL(image_path)} alt='preview' style={{width:"100%", maxHeight:"200px", objectFit:"contain"}} />
+          : <img id={id + '_preview'} src='/noimage.png' alt='preview' style={{width:"100%", maxHeight:"200px", objectFit:"cover", border:"1px solid gray"}}  />
+        }
+        <input id={id} type='file' name={name} onChange={handleChangeFile} style={{display:"none"}} />
+      </label>
+    );
+  }
+
+
   const style = {
     position: 'absolute' as 'absolute',
-    top: '30%',
+    top: '20%',
     left: '50%',
     transform: 'translate(-50%)',
     width: 350,
     height: 300
   };
+
+  const handleSubmit = () => {
+    const payload = {
+      account_id: usetStatus.id,
+      content: content,
+      image: uploadedImages.image,
+    }
+
+    const funcSuccess = (response: any) => {
+        handleClose();
+    }
+    const funcError = (error: any) => {
+      console.log("post error: ", error);
+  }
+  apiAccess('ADD_POST', funcSuccess, funcError, payload);
+}
 
   return (
     <Box>
@@ -365,19 +420,29 @@ export const AddModal = React.memo((props: AddModal) => {
       <Box sx={[style, {backgroundColor:"inherit"}]}>
         <Box sx={{display:"flex"}}>
           <Box sx={{backdropFilter:"blur(1px)", mr:"10px"}}>
-            <Avatar sx={{borderRadius:"20%"}}/>
+            <Avatar src={usetStatus.icon} sx={{borderRadius:"20%"}}/>
           </Box>
-          <Box sx={{backgroundColor:"white", width:"100%", height:"100%"}}>
+          <Box sx={{backgroundColor:"rgb(34,34,34)", width:"100%", height:"100%"}}>
+          {preview('id_image', 'profile-image', 'image', uploadedImages.image)}
+          <GrammarlyEditorPlugin clientId="client_AfLKqKA2kXNRSLTC4rjW2a">
             <TextField 
               label="What's happening?"
+              autoFocus
               rows={5}
+              type="text"
               multiline
               fullWidth
+              sx={{borderBottom:"1px solid gray", color:"white"}}
+              InputProps={{style: { color: '#fff'}}}
+              InputLabelProps={{
+                style: { color: '#fff' },
+              }}
+              onChange={(e) => setContent(e.target.value)}
             />
-            <Button fullWidth sx={{color:"black", backgroundColor:"lightgray"}}>Upload Image</Button>
+          </GrammarlyEditorPlugin>
             <Box sx={{p:2, display:"flex", justifyContent:"space-between"}}>
-              <Button sx={{border:"1px solid gray", borderRadius:"20px", color:"black", fontWeight:"bold"}}>閉じる</Button>
-              <Button sx={{border:"1px solid gray", borderRadius:"20px", color:"black", fontWeight:"bold"}}>投稿</Button>
+              <Button onClick={handleClose} sx={{border:"1px solid gray", borderRadius:"20px", color:"white", fontWeight:"bold"}}>閉じる</Button>
+              <Button onClick={handleSubmit} sx={{border:"1px solid gray", borderRadius:"20px", color:"white", fontWeight:"bold"}}>投稿</Button>
             </Box>
           </Box>
         </Box>

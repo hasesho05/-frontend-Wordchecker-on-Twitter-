@@ -1,15 +1,12 @@
 import Head from 'next/head';
 import type { AppProps } from 'next/app'
-import { Provider } from 'react-redux';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { CacheProvider, EmotionCache } from '@emotion/react';
 import theme from '../theme';
 import createEmotionCache from '../createEmotionCathe';
 import '../styles/globals.css'
-import {
-  RecoilRoot
-} from 'recoil';
+import { RecoilRoot } from 'recoil';
 import apiAccess from '../api/api';
 import { useEffect, useState } from 'react';
 const clientSideEmotionCache = createEmotionCache();
@@ -19,6 +16,7 @@ interface MyAppProps extends AppProps {
 
 function App(props: MyAppProps) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+
   const [request, setRequest] = useState({
     isSignedIn: false,
     user: {
@@ -54,6 +52,7 @@ function App(props: MyAppProps) {
     
     getAuth(token)
   }, [])
+
 
   return (
     <CacheProvider value={emotionCache}>
