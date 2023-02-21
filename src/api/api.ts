@@ -12,11 +12,17 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development'){
 export const urls = {
   signup: api_host + '/auth/signup/',
   login: api_host + '/auth/login/',
+  get_post_by_id: api_host + '/userpost/',
   profile_update: api_host + '/user/profile_update/',
   withdrawal: api_host + '/user/withdrawal/',
+  add_post: api_host + '/userpost/',
   get_new_posts: api_host + '/userpost/get_new_posts/',
   add_like: api_host + '/userpost/add_like/',
   remove_like: api_host + '/userpost/remove_like/',
+  get_comments: api_host + '/comment_post/',
+  add_comment: api_host + '/comment_post/',
+  add_commentlike: api_host + '/comment_post/add_like/',
+  remove_commentlike: api_host + '/comment_post/remove_like/',
   authorization: api_host + '/auth/authenticated/',
   history: api_host + '/history/',
   history_list: api_host + '/history/list/',
@@ -27,11 +33,17 @@ export const urls = {
 export const actionList = {
   SIGNUP: 'SIGNUP',
   LOGIN: 'LOGIN',
+  GET_POST_BY_ID: 'GET_POST_BY_ID',
   PROFILE_UPDATE: 'PROFILE_UPDATE',
   WITHDRAWAL: 'WITHDRAWAL',
+  ADD_POST: 'ADD_POST',
   GET_NEW_POSTS: 'GET_NEW_POSTS',
   ADD_LIKE: 'ADD_LIKE',
   REMOVE_LIKE: 'REMOVE_LIKE',
+  GET_COMMENTS: 'GET_COMMENTS',
+  ADD_COMMENT: 'ADD_COMMENT',
+  ADD_COMMENTLIKE: 'ADD_COMMENTLIKE',
+  REMOVE_COMMENTLIKE: 'REMOVE_COMMENTLIKE',
   HISTORY: 'HISTORY',
   HISTORY_LIST: 'HISTORY_LIST',
   AUTHORIZATION: 'AUTHORIZATION',
@@ -76,7 +88,16 @@ function apiAccess(action: string, funcSuccess: Function, funcError: Function, p
         funcError(e);
       });
       break;
-    
+      
+    case actionList.GET_POST_BY_ID:
+      axios.get(urls.get_post_by_id + search)
+      .then((response) => {
+        funcSuccess(response);
+      }).catch((e) => {
+        funcError(e);
+      });
+      break;
+
     case actionList.PROFILE_UPDATE:
       axios({
         method: 'put',
@@ -115,9 +136,31 @@ function apiAccess(action: string, funcSuccess: Function, funcError: Function, p
       });
       break;
 
+    case actionList.GET_COMMENTS:
+      axios.get(urls.get_comments + search)
+      .then((response) => {
+        funcSuccess(response);
+      }).catch((e) => {
+        funcError(e);
+      });
+      break;
+
     case actionList.GET_NEW_POSTS:
       axios.get(urls.get_new_posts + search)
       .then((response) => {
+        funcSuccess(response);
+      }).catch((e) => {
+        funcError(e);
+      });
+      break;
+
+    case actionList.ADD_POST:
+      axios({
+        method: 'post',
+        url: urls.add_post,
+        data: payload,
+        headers: { "content-type": 'multipart/form-data'},
+      }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {
         funcError(e);
@@ -141,6 +184,45 @@ function apiAccess(action: string, funcSuccess: Function, funcError: Function, p
       axios({
         method: 'post',
         url: urls.remove_like + search,
+        data: payload,
+        headers: { "content-type": 'application/json', }
+      }).then((response) => {
+        funcSuccess(response);
+      }).catch((e) => {
+        funcError(e);
+      });
+      break;
+    
+    case actionList.ADD_COMMENT:
+      axios({
+        method: 'post',
+        url: urls.add_comment,
+        data: payload,
+        headers: { "content-type": 'application/json', }
+      }).then((response) => {
+        funcSuccess(response);
+      }).catch((e) => {
+        funcError(e);
+      });
+      break;
+    
+    case actionList.ADD_COMMENTLIKE:
+      axios({
+        method: 'post',
+        url: urls.add_commentlike,
+        data: payload,
+        headers: { "content-type": 'application/json', }
+      }).then((response) => {
+        funcSuccess(response);
+      }).catch((e) => {
+        funcError(e);
+      });
+      break;
+
+    case actionList.REMOVE_COMMENTLIKE:
+      axios({
+        method: 'post',
+        url: urls.remove_commentlike,
         data: payload,
         headers: { "content-type": 'application/json', }
       }).then((response) => {
