@@ -12,10 +12,13 @@ import { getDownloadURL, listAll } from "firebase/storage";
 import { ref } from "firebase/storage";
 import apiAccess from "../api/api";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-
+import Cookies from 'js-cookie';
 import { resizeFile } from "../util/util";
 import { GrammarlyEditorPlugin } from '@grammarly/editor-sdk-react'
-import { userStatusState } from "../status/userstatus";
+import { userStatusState } from "../recoil/userstatus";
+import { PostState } from "../recoil/post";
+import useSWR, { mutate } from 'swr';
+import { useRouter } from "next/router";
 
 interface SignUpModal {
   signUpModalopen: boolean;
@@ -218,8 +221,7 @@ export const SignInModal = React.memo((props: SingInModal) => {
 
     const funcSuccess = (response: any) => {
       if (response.data.status === "success") {
-        console.log("signin success");
-        console.log(response.data.data);
+        Cookies.set('token', response.data.token, { expires: 7, path: '/' });
         
         localStorage.setItem("token", response.data.token);
         setUserStatus({
@@ -351,9 +353,11 @@ interface AddModal {
 
 export const AddModal = React.memo((props: AddModal) => {
   const { addModalopen, setAddModalopen} = props;
+  const router = useRouter()
   const [uploadedImages, setUploadedImages] = useState<any>({});
   const [content, setContent] = useState<string>("");
   const usetStatus = useRecoilValue(userStatusState);
+  const [newPosts, setNewPosts] = useRecoilState(PostState)
 
   const handleClose = () => setAddModalopen(false);
 
@@ -389,7 +393,7 @@ export const AddModal = React.memo((props: AddModal) => {
     top: '20%',
     left: '50%',
     transform: 'translate(-50%)',
-    width: 350,
+    width: {xs: 300, sm: 400, md: 500},
     height: 300
   };
 
@@ -401,6 +405,8 @@ export const AddModal = React.memo((props: AddModal) => {
     }
 
     const funcSuccess = (response: any) => {
+        setNewPosts([...newPosts, response.data.data])
+        router.reload()
         handleClose();
     }
     const funcError = (error: any) => {

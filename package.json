@@ -24,6 +24,7 @@
     "eslint": "8.33.0",
     "eslint-config-next": "13.1.6",
     "firebase": "^9.6.8",
+    "js-cookie": "^3.0.1",
     "moment": "^2.29.4",
     "next": "13.1.6",
     "react": "18.2.0",
@@ -36,11 +37,13 @@
     "reselect": "^4.1.7",
     "sass": "^1.58.3",
     "scss": "^0.2.4",
+    "swr": "^2.0.3",
     "typescript": "4.9.5",
     "url-loader": "^4.1.1"
   },
   "devDependencies": {
     "@types/firebase": "^3.2.1",
+    "@types/js-cookie": "^3.0.3",
     "@types/react-redux": "^7.1.25",
     "chart.js": "^4.2.0",
     "react-chartjs-2": "^5.2.0"

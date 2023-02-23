@@ -10,9 +10,13 @@ import apiAccess from '../../api/api';
 import { useCallback, useEffect} from 'react';
 import BlackButton from '../../components/common/BlackButton';
 import Layout from "../../components/Layout";
+import { useRecoilValue } from "recoil";
+import { userStatusState } from "../../recoil/userstatus";
 const theme = createTheme();
 
-const add = () => {
+const Edit = () => {
+  const userStatus = useRecoilValue(userStatusState)
+
   const [uploadedImages, setUploadedImages] = useState<any>({image:"", cover_image:""})
   const handleChangeFile = async(e: any) => {
     const { name, files } = e.target;
@@ -42,8 +46,6 @@ const add = () => {
 
   const [username, setUsername] = useState("");
   const [profile, setProfile] = useState("");
-
-
   const inputUserName = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setUsername(e.target.value)
   },[setUsername])
@@ -53,8 +55,23 @@ const add = () => {
   },[setProfile])
 
 
-  const handleSubmit = (e:any) => {
+  const handleSubmit = () => {
+    const payload = {
+      'token': localStorage['auth_token'],
+      'account_id': userStatus.id,
+      'username': username,
+      'profile': profile,
+      ...uploadedImages,
+    }
+    const funcSuccess = (response: any) => {
+      console.log(response);
+    }
+    const funcError = (error: any) => {
+      console.log(error);
+    }
+    apiAccess('PROFILE_UPDATE', funcSuccess, funcError, payload);
   }
+
 
   return (
     <Layout>
@@ -129,4 +146,4 @@ const add = () => {
   );
 }
 
-export default add;
+export default Edit;

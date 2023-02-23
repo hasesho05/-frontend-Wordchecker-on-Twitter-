@@ -10,7 +10,7 @@ interface Props {
 const Layout = (props:Props) => {
   return (
     <>
-      <Box sx={{backgroundSize:"contain", backgroundColor:"rgb(0, 25, 53)" , padding:0, b:0, height:"30vh"  }}>
+      <Box sx={{backgroundSize:"contain", backgroundColor:"rgb(0, 25, 53)" , padding:0, b:0 }}>
         <Header />
         <Box sx={{m:0,p:0}}>
           {props.children}
