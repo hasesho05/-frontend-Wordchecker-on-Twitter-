@@ -16,44 +16,6 @@ interface MyAppProps extends AppProps {
 
 function App(props: MyAppProps) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-
-  const [request, setRequest] = useState({
-    isSignedIn: false,
-    user: {
-      id: 0,
-      username: "",
-      icon: "",
-    }
-  })
-
-  const getAuth = (token: string | null) => {
-    const payload = {
-      token: token
-    }
-    const funcSuccess = (response: any) => {
-      setRequest({
-        isSignedIn: true,
-        user: {
-          id: response.data.data.id,
-          username: response.data.data.username,
-          icon: response.data.data.user_icon,
-        }
-      })
-    }
-    const funcError = (error: any) => {
-      console.log(error)
-    }
-    apiAccess("AUTHORIZATION", funcSuccess, funcError, payload)
-  }
-
-  useEffect(() => {
-    var token = localStorage.getItem('token')
-    console.log(token);
-    
-    getAuth(token)
-  }, [])
-
-
   return (
     <CacheProvider value={emotionCache}>
       <Head>
@@ -62,7 +24,7 @@ function App(props: MyAppProps) {
       <ThemeProvider theme={theme}>
         <CssBaseline />
           <RecoilRoot>
-            <Component {...pageProps} request={request} />
+            <Component {...pageProps} />
           </RecoilRoot>
       </ThemeProvider>
     </CacheProvider>

@@ -17,7 +17,7 @@ import { useRouter } from 'next/router';
 import TwitterLoginButton from '../components/common/TwitterLoginButton';
 import BlackButton from '../components/common/BlackButton';
 import { useRecoilState } from 'recoil';
-import { userStatusState } from '../status/userstatus';
+import { userStatusState } from '../recoil/userstatus';
 
 function Copyright(props: any) {
   return (

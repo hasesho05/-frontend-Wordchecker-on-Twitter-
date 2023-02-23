@@ -7,7 +7,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { userStatusState } from "../../status/userstatus";
+import { userStatusState } from "../../recoil/userstatus";
 import apiAccess from "../../api/api";
 import PostComment from "./PostComment";
 
@@ -23,6 +23,7 @@ const ProfilePost = (props:Props) => {
   const [comments, setComments] = useState<any[]>([]);
   const [comment, setComment] = useState("")
   const userStatus = useRecoilValue(userStatusState)
+  
 
   const addLike = () => {
     const payload = {
@@ -95,8 +96,8 @@ const ProfilePost = (props:Props) => {
 
   return (
   <Box sx={{p:2, border:"1px solid darkgray"}}>
-    <Box sx={{position:"relative", minHeight:"300px"}}>
-      <Image src={post.image} fill alt="post_image" />
+    <Box sx={{position:"relative", minHeight:"300px", width:{xs:"320px", sm:"550px"}, display:"flex"}}>
+      <Image src={post.image} fill alt="post_image" objectFit="contain" style={{margin:"0 auto"}}/>
     </Box>
     <Box sx={{p:2}}>
       <Typography sx={{color:"white", fontSize:"15px"}}>{post.content}</Typography>

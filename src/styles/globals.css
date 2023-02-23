@@ -14,12 +14,21 @@ a {
   color: inherit;
 }
 
+input {
+  outline: none;
+}
+
+.recommend {
+  z-index: 10!important;
+  background-color: rgb(0, 40, 70)!important;
+}
+
 .MuiButtonBase-root {
   z-index: 0;
 }
 
 .MuiBox-root {
-  z-index: 100;
+  z-index: 2;
   background-size: cover;
   background-position: bottom 0px;
   background-repeat: no-repeat;
@@ -37,4 +46,9 @@ a {
   width: 100%;
   max-height: 200px;
   object-fit: cover;
+}
+
+
+.profile {
+  overflow: hidden;
 }

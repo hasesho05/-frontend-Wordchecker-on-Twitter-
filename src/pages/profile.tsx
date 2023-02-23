@@ -15,19 +15,17 @@ import apiAccess from '../api/api';
 import { getDownloadURL, listAll, ref } from 'firebase/storage';
 import { auth, firestorage, storageRef } from '../config';
 import { useCallback, useEffect, useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
-import { signInAction } from '../redux/users/actions';
 import { useRouter } from 'next/router';
-import TwitterLoginButton from '../components/common/TwitterLoginButton';
 import BlackButton from '../components/common/BlackButton';
 import { resizeFile } from '../util/util';
+import { userStatusState } from '../recoil/userstatus';
+import { useRecoilValue } from 'recoil';
 
 const theme = createTheme();
 
 export default function SignInSide() {
-  const dispatch = useDispatch();
-  const router = useRouter();
+  const userStatus = useRecoilValue(userStatusState)
   const [username, setUsername] = useState("");
   const [profile, setProfile] = useState("");
   const [message, setMessage] = useState("");

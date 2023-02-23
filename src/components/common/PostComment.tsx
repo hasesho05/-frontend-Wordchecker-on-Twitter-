@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 import { Container } from "@mui/system";
 import { useRecoilValue } from "recoil";
-import { userStatusState } from "../../status/userstatus";
+import { userStatusState } from "../../recoil/userstatus";
 import apiAccess from "../../api/api";
 
 type Props = {
