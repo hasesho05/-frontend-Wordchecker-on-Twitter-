@@ -27,7 +27,7 @@ const SearchField = (props: any) => {
   const style = {
     width:"90%",
     ml:"10px",
-    mt:"5px", 
+    mt:"10px", 
     backgroundColor:"white",
     borderRadius:"10px",
     borderColor:"white",

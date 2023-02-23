@@ -94,7 +94,7 @@ export const Header = React.memo((props: any) => {
         <Box flexGrow={1}>
           <AppBar position="static" sx={{backgroundColor:"inherit", borderBottom:"1px solid rgba(200,200,200,0.3)"}}>
             <Toolbar sx={{display:"flex", justifyContent:"space-between"}}>
-              {matches && <Image src="/images/logo/logo_light.png" alt="logo" width={170} height={40} style={{cursor:"pointer"}} onClick={()=>window.location.href="/"}/>}
+              {matches && <Image src="/LangLink.png" alt="logo" width={100} height={40} style={{cursor:"pointer"}} onClick={()=>window.location.href="/"}/>}
               <>
               
               {userStatus?.isLogin ? 
@@ -119,7 +119,7 @@ export const Header = React.memo((props: any) => {
                 </IconButton>
               </Box>
               :
-                <Box sx={{display: "flex", ml:"auto"}}>
+                <Box sx={{display: "flex", ml:"auto", whiteSpace:"nowrap"}}>
                   <SearchField query={q}/>
                   <GreenButton value={"ログイン"} onClick={handleSignIn}/>
                   <GreenButton value={"新規登録"} onClick={()=>router.push("/signup")}/>
