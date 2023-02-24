@@ -23,11 +23,13 @@ const Post = (props:Props) => {
   const {post, setOpen, setId} = props;
 
   const [isLiked, setIsLiked] = useState(false);
+  const [arrayLikes, setArrayLikes] = useState<any[]>([]);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [comments, setComments] = useState<any[]>([]);
   const [comment, setComment] = useState("")
   const matches = useMediaQuery('(min-width:600px)');
   const userStatus = useRecoilValue(userStatusState)
+  
   const [following, setFollowing] = useRecoilState(followingState);
   const addLike = () => {
     const payload = {
@@ -37,8 +39,7 @@ const Post = (props:Props) => {
 
     const funcSuccess = (response: any) => {
       setIsLiked(true);
-      post.like.push(userStatus.id);
-      console.log(response.data);
+      setArrayLikes([...arrayLikes, userStatus.id]);
     }
     const funcError = (error: any) => {
       console.log(error);
@@ -53,7 +54,7 @@ const Post = (props:Props) => {
     }
     const funcSuccess = (response: any) => {
       setIsLiked(false);
-      post.like.pop(userStatus.id);
+      setArrayLikes(arrayLikes.filter((item) => item !== userStatus.id));
     }
     const funcError = (error: any) => {
       console.log(error);
@@ -78,10 +79,16 @@ const Post = (props:Props) => {
   }
 
   useEffect(() => {
-    if (post?.like?.includes(userStatus.id)) {
-      setIsLiked(true);
-    }
+    setArrayLikes(post.like);
   }, [post])
+
+  useEffect(() => {
+    if (arrayLikes.includes(userStatus.id)) {
+      setIsLiked(true);
+    } else {
+      setIsLiked(false);
+    }
+  }, [arrayLikes])
 
   useEffect(() => {
     if (isCommentOpen) {
@@ -162,7 +169,7 @@ const Post = (props:Props) => {
               </Box>
               <Box sx={{display:"flex", gap:0.5}}>
                 <FavoriteIcon onClick={!isLiked ? addLike : removeLike} sx={isLiked ? {width:"16px",cursor:"pointer" ,color:"red"} : {width:"16px",cursor:"pointer"}}/>
-                <Typography sx={{fontSize:"14px", mt:"1px"}}>{post?.like?.length}</Typography>
+                <Typography sx={{fontSize:"14px", mt:"1px"}}>{arrayLikes.length}</Typography>
               </Box>
               <Box sx={{display:"flex", gap:0.5}}>
                 <IosShareIcon sx={{width:"16px"}}/>

@@ -1,4 +1,5 @@
 import axios from "axios";
+
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 
@@ -22,6 +23,7 @@ export const urls = {
   get_follower_info: api_host + '/follow/get_followed/',
   add_post: api_host + '/userpost/',
   get_new_posts: api_host + '/userpost/get_new_posts/',
+  get_popular_posts: api_host + '/userpost/get_popular_posts/',
   add_like: api_host + '/userpost/add_like/',
   remove_like: api_host + '/userpost/remove_like/',
   get_comments: api_host + '/comment_post/get_comments/',
@@ -49,6 +51,7 @@ export const actionList = {
   GET_FOLLOWER_INFO: 'GET_FOLLOWER_INFO',
   ADD_POST: 'ADD_POST',
   GET_NEW_POSTS: 'GET_NEW_POSTS',
+  GET_POPULAR_POSTS: 'GET_POPULAR_POSTS',
   ADD_LIKE: 'ADD_LIKE',
   REMOVE_LIKE: 'REMOVE_LIKE',
   GET_COMMENTS: 'GET_COMMENTS',
@@ -80,7 +83,7 @@ async function apiAccess(action: string, funcSuccess: Function, funcError: Funct
         method: 'post',
         url: urls.signup,
         data: payload,
-        headers: { "content-type": 'application/json', }
+        headers: { "content-type": 'application/x-www-form-urlencoded', }
       }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {
@@ -93,7 +96,7 @@ async function apiAccess(action: string, funcSuccess: Function, funcError: Funct
         method: 'post',
         url: urls.login,
         data: payload,
-        headers: { "content-type": 'application/json', }
+        headers: { "content-type": 'application/x-www-form-urlencoded', }
       }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {
@@ -137,7 +140,7 @@ async function apiAccess(action: string, funcSuccess: Function, funcError: Funct
         method: 'post',
         url: urls.withdrawal,
         data: payload,
-        headers: { "content-type": 'application/json', }
+        headers: { "content-type": 'application/x-www-form-urlencoded', }
       }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {
@@ -150,7 +153,7 @@ async function apiAccess(action: string, funcSuccess: Function, funcError: Funct
         method: 'post',
         url: urls.authorization,
         data: payload,
-        headers: { "content-type": 'application/json', }
+        headers: { "content-type": 'application/x-www-form-urlencoded', }
       }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {
@@ -163,7 +166,7 @@ async function apiAccess(action: string, funcSuccess: Function, funcError: Funct
         method: 'post',
         url: urls.follow,
         data: payload,
-        headers: { "content-type": 'application/json', }
+        headers: { "content-type": 'application/x-www-form-urlencoded', }
       }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {
@@ -176,7 +179,7 @@ async function apiAccess(action: string, funcSuccess: Function, funcError: Funct
         method: 'post',
         url: urls.unfollow,
         data: payload,
-        headers: { "content-type": 'application/json', }
+        headers: { "content-type": 'application/x-www-form-urlencoded', }
       }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {
@@ -208,7 +211,7 @@ async function apiAccess(action: string, funcSuccess: Function, funcError: Funct
         method: 'post',
         url: urls.get_comments,
         data: payload,
-        headers: { "content-type": 'application/json', }
+        headers: { "content-type": 'application/x-www-form-urlencoded', }
       }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {
@@ -218,6 +221,15 @@ async function apiAccess(action: string, funcSuccess: Function, funcError: Funct
 
     case actionList.GET_NEW_POSTS:
       axios.get(urls.get_new_posts + search)
+      .then((response) => {
+        funcSuccess(response);
+      }).catch((e) => {
+        funcError(e);
+      });
+      break;
+
+    case actionList.GET_POPULAR_POSTS:
+      axios.get(urls.get_popular_posts + search)
       .then((response) => {
         funcSuccess(response);
       }).catch((e) => {
@@ -243,7 +255,7 @@ async function apiAccess(action: string, funcSuccess: Function, funcError: Funct
         method: 'post',
         url: urls.add_like,
         data: payload,
-        headers: { "content-type": 'application/json', }
+        headers: { "content-type": 'application/x-www-form-urlencoded', }
       }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {
@@ -256,7 +268,7 @@ async function apiAccess(action: string, funcSuccess: Function, funcError: Funct
         method: 'post',
         url: urls.remove_like + search,
         data: payload,
-        headers: { "content-type": 'application/json', }
+        headers: { "content-type": 'application/x-www-form-urlencoded', }
       }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {
@@ -269,7 +281,7 @@ async function apiAccess(action: string, funcSuccess: Function, funcError: Funct
         method: 'post',
         url: urls.add_comment,
         data: payload,
-        headers: { "content-type": 'application/json', }
+        headers: { "content-type": 'application/x-www-form-urlencoded', }
       }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {
@@ -282,7 +294,7 @@ async function apiAccess(action: string, funcSuccess: Function, funcError: Funct
         method: 'post',
         url: urls.add_commentlike,
         data: payload,
-        headers: { "content-type": 'application/json', }
+        headers: { "content-type": 'application/x-www-form-urlencoded', }
       }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {
@@ -295,7 +307,7 @@ async function apiAccess(action: string, funcSuccess: Function, funcError: Funct
         method: 'post',
         url: urls.remove_commentlike,
         data: payload,
-        headers: { "content-type": 'application/json', }
+        headers: { "content-type": 'application/x-www-form-urlencoded', }
       }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {
@@ -308,7 +320,7 @@ async function apiAccess(action: string, funcSuccess: Function, funcError: Funct
         method: 'post',
         url: urls.history,
         data: payload,
-        headers: { "content-type": 'application/json', }
+        headers: { "content-type": 'application/x-www-form-urlencoded', }
       }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {
@@ -330,7 +342,7 @@ async function apiAccess(action: string, funcSuccess: Function, funcError: Funct
         method: 'post',
         url: urls.check_user_id + search,
         data: payload,
-        headers: { "content-type": 'application/json', }
+        headers: { "content-type": 'application/x-www-form-urlencoded', }
       }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {
@@ -341,9 +353,9 @@ async function apiAccess(action: string, funcSuccess: Function, funcError: Funct
     case actionList.CHECK:
       await axios({
         method: 'post',
-        url: urls.check + search,
+        url: "http://localhost:5000/",
         data: payload,
-        headers: { "content-type": 'application/json', }
+        headers: { "content-type": 'application/x-www-form-urlencoded', }
       }).then((response) => {
         funcSuccess(response);
       }).catch((e) => {

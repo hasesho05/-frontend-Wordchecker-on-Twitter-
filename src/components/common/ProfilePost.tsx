@@ -34,7 +34,6 @@ const ProfilePost = (props:Props) => {
     const funcSuccess = (response: any) => {
       setIsLiked(true);
       post.like.push(userStatus.id);
-      console.log(response.data);
     }
     const funcError = (error: any) => {
       console.log(error);

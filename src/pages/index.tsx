@@ -1,17 +1,15 @@
-import { Avatar, Box, Button, Typography, useMediaQuery } from '@mui/material'
+import { Box, Button, Typography, useMediaQuery } from '@mui/material'
 import React, { useCallback, useEffect, useState } from 'react'
 import FindWord from '../components/FindWord';
-import cookie from 'js-cookie';
 import Layout from '../components/Layout';
 import Link from 'next/link';
 import { RecoilRoot, useRecoilValue } from 'recoil';
 import NewPostBox from '../components/NewPostBox';
-import Loading from '../components/common/Loading/Loading';
 import { ExampleModal } from '../components/SlideProfile';
-import { getFollowInfo } from '../util/api';
 import apiAccess from '../api/api';
 import { userStatusState } from '../recoil/userstatus';
 import UserList from '../components/UserList';
+import PopularPostBox from '../components/PopularPostBox';
 
 
 interface Props {
@@ -105,10 +103,10 @@ const Home = React.memo((props:Props) => {
               <Button onClick={()=>setMode(2)} sx={[tabStyle, mode === 2 && activeTabStyle]}>検索🔍</Button>
             </Link>
           </Box>
-          <Box sx={{mt:"150px",padding: {xs: "20px", sm:"20px", display:"flex", gap:"20px"}}}>
+          <Box sx={{padding: {xs: "20px", sm:"20px", display:"flex", gap:"20px"}}}>
             {mode === 0 && <NewPostBox open={open} setOpen={setOpen} setId={setId}/> }
-            {mode === 1 && <Loading />}
-            {mode === 2 && <FindWord/> }
+            {mode === 1 && <PopularPostBox open={open} setOpen={setOpen} setId={setId}/>}
+            {mode === 2 && <FindWord /> }
             {matches &&
             <Box sx={{width:"320px", maxHeight:"500px",background:"rgb(0, 40, 70)", overflow:"scroll", '& ::-webkit-scrollbar': {display: "none"}}}>
               <Box  className="recommend"  sx={{display:"flex", justifyContent:"center", alignItems:"center", height:"70px", borderBottom:"1px solid  rgba(200,200,200,0.3)", position:"sticky", top:"0", zIndex:"10"}}>
