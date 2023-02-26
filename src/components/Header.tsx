@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import apiAccess from "../api/api";
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import Link from "next/link";
-import { useRecoilState, useRecoilTransactionObserver_UNSTABLE, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { userStatusState } from "../recoil/userstatus";
 import SearchField from "./SearchField";
 
@@ -75,6 +75,9 @@ export const Header = React.memo((props: any) => {
         <Box sx={{display:"flex", justifyContent:"center"}}>
           <Avatar src={props.request?.user.icon} sx={{width:"50px", height:"50px", ml:"10px", mr:"10px"}}/>
         </Box>
+        <Link href={`/user/${userStatus.userId}`}>
+          <MenuItem >マイページ</MenuItem>
+        </Link>
         <Link href="/user/edit">
           <MenuItem >プロフィール編集</MenuItem>
         </Link>

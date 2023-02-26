@@ -353,7 +353,7 @@ async function apiAccess(action: string, funcSuccess: Function, funcError: Funct
     case actionList.CHECK:
       await axios({
         method: 'post',
-        url: "http://localhost:5000/",
+        url: "http://127.0.0.1:5000/",
         data: payload,
         headers: { "content-type": 'application/x-www-form-urlencoded', }
       }).then((response) => {

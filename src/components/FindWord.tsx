@@ -61,29 +61,29 @@ const FindWord = React.memo(() => {
           data: [...number],
           // グラフの背景色
           backgroundColor: [
-            '#FFB6C1',
-            '#FFE4C4',
-            '#FFD700',
-            '#ADFF2F',
-            '#00BFFF',
-            '#8A2BE2',
-            '#FF1493',
-            '#00FFFF',
-            '#FFA500',
-            '#9400D3',
+            'rgba(255,198,158,0.8)',
+            'rgba(255,231,179,0.8)',
+            'rgba(135,206,250,0.8)',
+            'rgba(154,205,50,0.8)',
+            'rgba(255,110,180,0.8)',
+            'rgba(152,255,152,0.8)',
+            'rgba(216,191,216,0.8)',
+            'rgba(139,0,139,0.8)',
+            'rgba(152,251,152,0.8)',
+            'rgba(240,128,128,0.8)',
           ],
           // グラフの枠線の色
           borderColor: [
-            '#FFB6C1',
-            '#FFE4C4',
-            '#FFD700',
-            '#ADFF2F',
-            '#00BFFF',
-            '#8A2BE2',
-            '#FF1493',
-            '#00FFFF',
-            '#FFA500',
-            '#9400D3',
+            '#D77D1C',
+            '#CCA300',
+            '#0080FF',
+            '#228B22',
+            '#FF007F',
+            '#00C957',
+            '#AF52DE',
+            '#800080',
+            '#2E8B57',
+            '#CD5C5C',
           ],
           // グラフの枠線の太さ
           borderWidth: 1,
@@ -91,24 +91,26 @@ const FindWord = React.memo(() => {
       ],
       options: {
         plugins: {
-          title: {
-            color: "white",
-          },
           legend: {
             labels: {
-              color: "white",
-            },
-          },
-          tooltip: {
-            bodyColor: "white",
+              color:"white"
+            }
           }
         },
         scales: {
-          "yaxes_1" : {
-            beginAtZero: true
-          }
-        }
-    }
+          xAxes: [{
+            ticks: {
+              fontColor: 'white'
+            }
+          }],
+          yAxes: [{
+            ticks: {
+              fontColor: 'white'
+            }
+          }]
+        },
+
+      }
     })
 
   },[wordData])
@@ -122,11 +124,16 @@ const FindWord = React.memo(() => {
           text: text,
         },
       },
+      legend: {
+        labels: {
+          fontColor: "white",
+        }
+      }
     })
   },[text])
 
   return (
-    <Box sx={{border:"1px solid gray"}}>
+    <Box sx={{border:"1px solid gray", maxWidth:"540px"}}>
       <Stack spacing={3}>
         <FormControl>
           <TextField
