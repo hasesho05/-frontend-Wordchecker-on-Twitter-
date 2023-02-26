@@ -153,8 +153,8 @@ const Post = (props:Props) => {
           </Box>
         </Box>
           <Box sx={{backgroundColor:"rgb(34,34,34)"}}>
-            <Box sx={{position:"relative", minHeight:{xs:"280px", ms:"400px", md:"400px", lg:"600px", xl:"600px"}, width:"100%", borderRadius:"50px"}}>
-              <Image src={post.image} alt={post.content} fill objectFit="cover" loading="eager" placeholder="blur" blurDataURL="blur.png"/>
+            <Box sx={{position:"relative", minHeight:{xs:"280px", ms:"400px", md:"400px", lg:"400px", xl:"400px"}, width:"100%", borderRadius:"50px"}}>
+              <Image src={post.image} alt={post.content} fill objectFit="contain" loading="eager" placeholder="blur" blurDataURL="blur.png"/>
             </Box>
             <Box>
             <Box sx={{m:"20px"}}>

@@ -1,0 +1,193 @@
+[
+  {
+    "question": "What is the meaning of 'conundrum'?",
+    "options": ["a difficult problem", "a dangerous situation", "a complex system", "a simple task"],
+    "correctAnswer": 0
+  },
+  {
+    "question": "What is the meaning of 'juxtapose'?",
+    "options": ["to compare", "to mix up", "to move around", "to place side by side"],
+    "correctAnswer": 3
+  },
+  {
+    "question": "What is the meaning of 'sycophant'?",
+    "options": ["a flatterer", "a cheat", "a coward", "a friend"],
+    "correctAnswer": 0
+  },
+  {
+    "question": "What is the meaning of 'cursory'?",
+    "options": ["careful", "superficial", "detailed", "thorough"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "What is the meaning of 'prevaricate'?",
+    "options": ["to avoid", "to criticize", "to lie", "to praise"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "What is the meaning of 'abhor'?",
+    "options": ["to detest", "to admire", "to ignore", "to respect"],
+    "correctAnswer": 0
+  },
+  {
+    "question": "What is the meaning of 'benevolent'?",
+    "options": ["kind", "evil", "stubborn", "deceitful"],
+    "correctAnswer": 0
+  },
+  {
+    "question": "What is the meaning of 'mercurial'?",
+    "options": ["volatile", "steady", "reliable", "stable"],
+    "correctAnswer": 0
+  },
+  {
+    "question": "What is the meaning of 'quintessential'?",
+    "options": ["typical", "unusual", "atypical", "unique"],
+    "correctAnswer": 0
+  },
+  {
+    "question": "What is the meaning of 'ubiquitous'?",
+    "options": ["present everywhere", "rare", "limited", "invisible"],
+    "correctAnswer": 0
+  },
+  {
+    "question": "What is the meaning of 'abrogate'?",
+    "options": ["to suppress", "to abolish", "to contradict", "to amend"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "What is the meaning of 'disingenuous'?",
+    "options": ["dishonest", "sincere", "genuine", "earnest"],
+    "correctAnswer": 0
+  },
+  {
+    "question": "What is the meaning of 'ignominious'?",
+    "options": ["glorious", "notorious", "infamous", "humiliating"],
+    "correctAnswer": 3
+  },
+  {
+    "question": "What is the meaning of 'loquacious'?",
+    "options": ["chatty", "quiet", "miserable", "graceful"],
+    "correctAnswer": 0
+  },
+  {
+    "question": "What is the meaning of 'pulchritudinous'?",
+    "options": ["ugly", "beautiful", "graceful", "handsome"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Which of the following sentences is grammatically correct?",
+    "options": [
+      "Me and my friends went to the movies.",
+      "My friends and me went to the movies.",
+      "My friends and I went to the movies.",
+      "I and my friends went to the movies."
+    ],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which of the following sentences uses the correct verb tense?",
+    "options": [
+      "I eat breakfast at 7am every morning.",
+      "I ate breakfast at 7am every morning.",
+      "I will eat breakfast at 7am every morning.",
+      "I am eat breakfast at 7am every morning."
+    ],
+    "correctAnswer": 0
+  },
+  {
+    "question": "Which of the following sentences is written in the active voice?",
+    "options": [
+      "The cake was eaten by the dog.",
+      "The dog ate the cake.",
+      "The cake has been eaten by the dog.",
+      "The cake is eaten by the dog."
+    ],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Which of the following sentences is a run-on sentence?",
+    "options": [
+      "I like to eat pizza, but I also like to eat burgers.",
+      "I like to eat pizza. I also like to eat burgers.",
+      "I like to eat pizza, I also like to eat burgers.",
+      "I like to eat pizza and I also like to eat burgers."
+    ],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which of the following sentences uses correct subject-verb agreement?",
+    "options": [
+      "The boy runs fast.",
+      "The boy run fast.",
+      "The boys runs fast.",
+      "The boys run fast."
+    ],
+    "correctAnswer": 0
+  },
+  {
+    "question": "Which of the following sentences uses correct punctuation?",
+    "options": [
+      "My favorite colors are red, green, and blue.",
+      "My favorite colors are red, green and blue.",
+      "My favorite colors are red green and blue.",
+      "My favorite colors are red,green, and blue."
+    ],
+    "correctAnswer": 0
+  },
+  {
+    "question": "Which of the following sentences uses correct capitalization?",
+    "options": [
+      "jane lives in new york city.",
+      "Jane lives in New York City.",
+      "jane lives in New York City.",
+      "Jane lives in new york city."
+    ],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Which of the following sentences is grammatically correct?",
+    "options": [
+      "He don't like to eat vegetables.",
+      "He doesn't like to eat vegetables.",
+      "He didn't like to eat vegetables.",
+      "He isn't like to eat vegetables."
+    ],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Which of the following sentences uses the correct pronoun?",
+    "options": [
+      "John and me went to the store.",
+      "John and I went to the store.",
+      "Me and John went to the store.",
+      "I and John went to the store."
+    ],
+    "correctAnswer": 1
+  },
+  {
+    "question": "「傲慢な、横柄な」という意味を持つ英単語は？",
+    "options": ["Arrogant", "Ambiguous", "Amicable", "Altruistic"],
+    "correctAnswer": 0
+    },
+    {
+    "question": "「抑圧する、押さえつける」という意味を持つ英単語は？",
+    "options": ["Repress", "Regress", "Renounce", "Revoke"],
+    "correctAnswer": 0
+    },
+    {
+    "question": "「細心の注意を払って、注意深く」という意味を持つ英単語は？",
+    "options": ["Meticulously", "Malignant", "Malleable", "Majestic"],
+    "correctAnswer": 0
+    },
+    {
+    "question": "「根絶する、完全に取り除く」という意味を持つ英単語は？",
+    "options": ["Eradicate", "Exacerbate", "Exonerate", "Explicate"],
+    "correctAnswer": 0
+    },
+    {
+    "question": "「慈悲深い、情け深い」という意味を持つ英単語は？",
+    "options": ["Compassionate", "Compelling", "Conscientious", "Contentious"],
+    "correctAnswer": 0
+    }
+  
+]

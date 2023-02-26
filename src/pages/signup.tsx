@@ -18,6 +18,7 @@ import TwitterLoginButton from '../components/common/TwitterLoginButton';
 import BlackButton from '../components/common/BlackButton';
 import { useRecoilState } from 'recoil';
 import { userStatusState } from '../recoil/userstatus';
+import { setUserId } from 'firebase/analytics';
 
 function Copyright(props: any) {
   return (
@@ -35,6 +36,7 @@ export default function SignInSide() {
   const router = useRouter();
   const [userInfo, setUserInfo] = useRecoilState(userStatusState)
   const [username, setUsername] = useState("");
+  const [userId, setUserId] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [imageURL, setImageURL] = useState("");
@@ -43,6 +45,10 @@ export default function SignInSide() {
   const inputUserName = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setUsername(e.target.value)
   },[setUsername])
+
+  const inputUserID = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setUserId(e.target.value)
+  },[setUserId])
 
   const inputEmail = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setEmail(e.target.value)
@@ -63,6 +69,7 @@ export default function SignInSide() {
   function handleSignup(userInitialData: UserInitialData){
     const payload = {
       username: username,
+      user_id: userId,
       email: userInitialData.email,
       password: userInitialData.password,
       user_icon: "",
@@ -72,11 +79,12 @@ export default function SignInSide() {
       localStorage.setItem('token', response.data.data.token);
       setUserInfo({
         id: response.data.data.id,
+        userId: response.data.data.user_id,
         icon: "",
         username: username,
-        isSignedIn: true,
+        isLogin: true,
       })
-      router.push('/');
+      router.push('/user/edit');
     }
     const funcError = (error: any) => {
       console.log("signup error: ", error);
@@ -151,6 +159,17 @@ export default function SignInSide() {
                 autoComplete="username"
                 autoFocus
                 onChange={(e)=>{inputUserName(e)}}
+              />
+            <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="User_ID"
+                label="User_ID"
+                name="User_ID"
+                autoComplete="User_ID"
+                autoFocus
+                onChange={(e)=>{inputUserID(e)}}
               />
               <TextField
                 margin="normal"

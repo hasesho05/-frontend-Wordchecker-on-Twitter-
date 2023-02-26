@@ -10,6 +10,8 @@ export const userStatusState = atom({
   key: 'userStatusState',
   default: {
     id: 1,
+    userId: "",
+    username: "",
     icon: "",
     isLogin: false,
   },

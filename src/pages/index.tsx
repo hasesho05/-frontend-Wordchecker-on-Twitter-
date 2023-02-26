@@ -10,6 +10,7 @@ import apiAccess from '../api/api';
 import { userStatusState } from '../recoil/userstatus';
 import UserList from '../components/UserList';
 import PopularPostBox from '../components/PopularPostBox';
+import QuestionBox from '../components/QuestionBox';
 
 
 interface Props {
@@ -85,7 +86,9 @@ const Home = React.memo((props:Props) => {
   }
 
   useEffect(()=> {
-    getFollowing();
+    if(userStatus.id !== 0){
+      getFollowing();
+    }
   },[])
   
   return (
@@ -108,6 +111,7 @@ const Home = React.memo((props:Props) => {
             {mode === 1 && <PopularPostBox open={open} setOpen={setOpen} setId={setId}/>}
             {mode === 2 && <FindWord /> }
             {matches &&
+            <>
             <Box sx={{width:"320px", maxHeight:"500px",background:"rgb(0, 40, 70)", overflow:"scroll", '& ::-webkit-scrollbar': {display: "none"}, position:"absolute", transform:"translateX(550px)"}}>
               <Box  className="recommend"  sx={{display:"flex", justifyContent:"center", alignItems:"center", height:"70px", borderBottom:"1px solid  rgba(200,200,200,0.3)", position:"sticky", top:"0", zIndex:"10"}}>
                 <Typography fontSize="20px" sx={{color:"white", fontWeight:"bold", mr:"auto", ml:"20px"}}>おすすめユーザー</Typography>
@@ -118,6 +122,8 @@ const Home = React.memo((props:Props) => {
                 ))}
               </Box>
             </Box>
+            <QuestionBox />
+            </>
             }
           </Box>
           {open && <ExampleModal id={id} open={open} onClose={()=>setOpen(false)} following={following}/>}

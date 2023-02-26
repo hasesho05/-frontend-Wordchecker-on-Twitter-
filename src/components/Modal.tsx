@@ -226,6 +226,8 @@ export const SignInModal = React.memo((props: SingInModal) => {
         localStorage.setItem("token", response.data.token);
         setUserStatus({
           id: response.data.data.id,
+          username: response.data.data.username,
+          userId: response.data.data.user_id,
           icon: response.data.data.user_icon,
           isLogin: true,
         })

@@ -133,7 +133,7 @@ const FindWord = React.memo(() => {
   },[text])
 
   return (
-    <Box sx={{border:"1px solid gray", maxWidth:"540px"}}>
+    <Box sx={{border:"1px solid gray", maxWidth:"540px", width:"100%", minHeight:"500px"}}>
       <Stack spacing={3}>
         <FormControl>
           <TextField
