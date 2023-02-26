@@ -1,14 +1,13 @@
-import { AppBar, Toolbar, IconButton, Box, Avatar, Menu, MenuItem, Button, Tooltip, Badge, useMediaQuery } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Box, Avatar, Menu, MenuItem, Tooltip, Badge, useMediaQuery, Typography } from "@mui/material";
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import GreenButton from "./common/GreenButton";
 import { AddModal, HistoryModal, SignInModal, SignUpModal } from "./Modal";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import apiAccess from "../api/api";
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import Link from "next/link";
-import { useRecoilState, useRecoilTransactionObserver_UNSTABLE, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { userStatusState } from "../recoil/userstatus";
 import SearchField from "./SearchField";
 
@@ -16,6 +15,7 @@ import SearchField from "./SearchField";
 export const Header = React.memo((props: any) => {
   const router = useRouter()
   const { q } = router.query;
+  const [userStatus, setUserStatus] = useRecoilState(userStatusState)
   const [signInModalopen, setSignInModalopen] = useState(false)
   const [signUpModalopen, setSignUpModalopen] = useState(false)
   const [historyModalOpen, setHistoryModalOpen] = useState(false)
@@ -51,7 +51,8 @@ export const Header = React.memo((props: any) => {
     setHydrated(true)
   },[])
 
-  const [userStatus, setUserStatus] = useRecoilState(userStatusState)
+
+  
 
   const ProfileMenu = () => {
     return (
@@ -72,9 +73,13 @@ export const Header = React.memo((props: any) => {
           </Badge>
         </Tooltip>
         </Box>
-        <Box sx={{display:"flex", justifyContent:"center"}}>
-          <Avatar src={props.request?.user.icon} sx={{width:"50px", height:"50px", ml:"10px", mr:"10px"}}/>
+        <Box sx={{display:"flex", justifyContent:"center", mb:"50px"}}>
+          <Avatar src={userStatus.icon} sx={{width:"50px", height:"50px", ml:"10px", mr:"10px"}}/>
+          <Typography>{userStatus.username}</Typography>
         </Box>
+        <Link href={`/user/${userStatus.userId}`}>
+          <MenuItem >マイページ</MenuItem>
+        </Link>
         <Link href="/user/edit">
           <MenuItem >プロフィール編集</MenuItem>
         </Link>
@@ -93,30 +98,34 @@ export const Header = React.memo((props: any) => {
       {hydrated &&
         <Box flexGrow={1}>
           <AppBar position="static" sx={{backgroundColor:"inherit", borderBottom:"1px solid rgba(200,200,200,0.3)"}}>
-            <Toolbar sx={{display:"flex", justifyContent:"space-between"}}>
+            <Toolbar sx={{display:"flex"}}>
               {matches && <Image src="/LangLink.png" alt="logo" width={100} height={40} style={{cursor:"pointer"}} onClick={()=>window.location.href="/"}/>}
               <>
               
               {userStatus?.isLogin ? 
-              <Box sx={{display:"flex"}}>
-                <SearchField query={q}/>
-                <IconButton
-                  size="small"
-                  sx={{mr:0.2}}
-                  onClick={() => setAddModalOpen(true)}
-                >
-                  <AddToPhotosIcon sx={{fontSize:"30px", color:"white"}}/>
-                </IconButton>
-                <IconButton
-                  onClick={handleClick}
-                  size="small"
-                  sx={{ ml:"auto", fontSize:"30px"}}
-                  aria-controls={open ? 'account-menu' : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open ? 'true' : undefined}
-                >
-                  <Avatar src={userStatus.icon} />
-                </IconButton>
+              <Box sx={{display:"flex", width:"100%"}}>
+                <Box sx={matches? {ml:"auto"}: {mr:"auto"}}>
+                  <SearchField query={q}/>
+                </Box>
+                <Box display="flex">
+                  <IconButton
+                    size="small"
+                    sx={{mr:0.2}}
+                    onClick={() => setAddModalOpen(true)}
+                  >
+                    <AddToPhotosIcon sx={{fontSize:"30px", color:"white"}}/>
+                  </IconButton>
+                  <IconButton
+                    onClick={handleClick}
+                    size="small"
+                    sx={{ ml:"auto", fontSize:"30px"}}
+                    aria-controls={open ? 'account-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                  >
+                    <Avatar src={userStatus.icon} />
+                  </IconButton>
+                </Box>
               </Box>
               :
                 <Box sx={{display: "flex", ml:"auto", whiteSpace:"nowrap"}}>

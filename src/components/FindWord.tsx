@@ -14,50 +14,33 @@ const FindWord = React.memo(() => {
   const [tweetList, setTweetList] = useState([])
   const [loading, setLoading] = useState(false)
   const [wordData, setWordData] = useState([])
-  const [graphData, setGraphData] = useState<GraphData>()
-  const [options, setOptions] = useState<Option>()
+  const [graphData, setGraphData] = useState<any>()
+  const [options, setOptions] = useState<any>()
 
-  const handleText = useMemo(() => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleText = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     e.preventDefault();
     setText(e.target.value)
-  },[])
-
-
-  const createHistory = () => {
-    const payloadWord = {
-      word: text,
-      token: localStorage.getItem("token")
-    }
-    const funcSuccessWord = (response: any) => {
-      console.log(response)
-    }
-    const funcErrorWord = (response: any) => {
-      console.log(response)
-    }
-    apiAccess("HISTORY", funcSuccessWord, funcErrorWord, payloadWord)
   }
 
   const onSubmit = useCallback(() => {
-    createHistory()
-    // setWordData([])
-    // setLoading(true)
-    // setTweetList([])
-    // const payload = {
-    //   id: text
-    // };
+    setWordData([])
+    setLoading(true)
+    setTweetList([])
+    const payload = {
+      id: text
+    };
 
-    // const funcSuccess = (response: any) => {
-    //   setTweetList(response.data.tweetList)
-    //   setWordData(response.data.counter)
-    //   setLoading(false)
-    //   createHistory()
-    // }
+    const funcSuccess = (response: any) => {
+      setTweetList(response.data.tweetList)
+      setWordData(response.data.counter)
+      setLoading(false)
+    }
 
-    // const funcError = (response: any) => {
-    //   console.log(response)
-    //   setLoading(false)
-    // }
-    // apiAccess('CHECK', funcSuccess, funcError, payload);
+    const funcError = (response: any) => {
+      console.log(response)
+      setLoading(false)
+    }
+    apiAccess('CHECK', funcSuccess, funcError, payload);
   },[text])
 
   useEffect(() => {
@@ -78,41 +61,56 @@ const FindWord = React.memo(() => {
           data: [...number],
           // グラフの背景色
           backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(255, 205, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgb(235, 186, 245, 0.2)',
-            'rgb(245, 201, 186, 0.2)',
-            'rgb(245, 235, 186, 0.2)',
-            'rgb(196, 245, 186, 0.2)',
+            'rgba(255,198,158,0.8)',
+            'rgba(255,231,179,0.8)',
+            'rgba(135,206,250,0.8)',
+            'rgba(154,205,50,0.8)',
+            'rgba(255,110,180,0.8)',
+            'rgba(152,255,152,0.8)',
+            'rgba(216,191,216,0.8)',
+            'rgba(139,0,139,0.8)',
+            'rgba(152,251,152,0.8)',
+            'rgba(240,128,128,0.8)',
           ],
           // グラフの枠線の色
           borderColor: [
-            'rgb(255, 99, 132)',
-            'rgb(255, 159, 64)',
-            'rgb(255, 205, 86)',
-            'rgb(75, 192, 192)',
-            'rgb(54, 162, 235)',
-            'rgb(153, 102, 255)',
-            'rgb(235, 186, 245)',
-            'rgb(245, 201, 186)',
-            'rgb(245, 235, 186)',
-            'rgb(196, 245, 186)',
+            '#D77D1C',
+            '#CCA300',
+            '#0080FF',
+            '#228B22',
+            '#FF007F',
+            '#00C957',
+            '#AF52DE',
+            '#800080',
+            '#2E8B57',
+            '#CD5C5C',
           ],
           // グラフの枠線の太さ
           borderWidth: 1,
         },
       ],
       options: {
-        scales: {
-          "yaxes_1" : {
-            beginAtZero: true
+        plugins: {
+          legend: {
+            labels: {
+              color:"white"
+            }
           }
-        }
-    }
+        },
+        scales: {
+          xAxes: [{
+            ticks: {
+              fontColor: 'white'
+            }
+          }],
+          yAxes: [{
+            ticks: {
+              fontColor: 'white'
+            }
+          }]
+        },
+
+      }
     })
 
   },[wordData])
@@ -126,22 +124,25 @@ const FindWord = React.memo(() => {
           text: text,
         },
       },
+      legend: {
+        labels: {
+          fontColor: "white",
+        }
+      }
     })
   },[text])
 
   return (
-    <Box sx={{border:"1px solid gray", backgroundColor:"gray"}}>
+    <Box sx={{border:"1px solid gray", maxWidth:"540px", width:"100%", minHeight:"500px"}}>
       <Stack spacing={3}>
         <FormControl>
-          <TextInput 
-            fullWidth={true}
-            required={true}
-            label={"英単語を入力"}
-            multiline={false}
-            rows={1}
-            value={text}
-            type={"text"}
-            onChange={(e)=>handleText(e)}
+          <TextField
+            sx={{width:"95%", mx:"auto", mt:"10px", backgroundColor:"white", borderRadius:"10px",borderColor:"white"}}
+            fullWidth
+            multiline
+            maxRows={3}
+            placeholder="英単語を入力"
+            onChange={(e) => handleText(e)}
           />
             <br />
           <BlackButton

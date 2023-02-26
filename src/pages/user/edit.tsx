@@ -4,19 +4,19 @@ import { resizeFile } from "../../util/util";
 import CssBaseline from '@mui/material/CssBaseline';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import apiAccess from '../../api/api';
 import { useCallback, useEffect} from 'react';
 import BlackButton from '../../components/common/BlackButton';
 import Layout from "../../components/Layout";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { userStatusState } from "../../recoil/userstatus";
+import { useRouter } from "next/router";
 const theme = createTheme();
 
 const Edit = () => {
-  const userStatus = useRecoilValue(userStatusState)
-
+  const router = useRouter()
+  const [userStatus, setUserStatus] = useRecoilState(userStatusState)
   const [uploadedImages, setUploadedImages] = useState<any>({image:"", cover_image:""})
   const handleChangeFile = async(e: any) => {
     const { name, files } = e.target;
@@ -64,7 +64,14 @@ const Edit = () => {
       ...uploadedImages,
     }
     const funcSuccess = (response: any) => {
-      console.log(response);
+      setUserStatus({
+        id: response.data.data.id,
+        userId: response.data.data.user_id,
+        icon: response.data.data.user_icon,
+        username: username,
+        isLogin: true,
+      })
+      router.push('/user/' + userStatus.userId);
     }
     const funcError = (error: any) => {
       console.log(error);

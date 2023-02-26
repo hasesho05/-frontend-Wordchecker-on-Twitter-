@@ -29,6 +29,8 @@ type UserData = {
   cover_image: string;
   twitter_link: string;
   profile: string;
+  following: number[];
+  follower: number[];
 };
 
 const UserPage: NextPage<UserPageProps> = ({ userData }) => {
@@ -40,7 +42,6 @@ const UserPage: NextPage<UserPageProps> = ({ userData }) => {
   const getUserPosts = () => {
     const payload = {id: userData.id}
     const funcSuccess = (response: any) => {
-      console.log(response.data.data);
       setPosts(response.data.data);
     }
     const funcError = (error: any) => {
@@ -58,8 +59,9 @@ const UserPage: NextPage<UserPageProps> = ({ userData }) => {
       following_id: userData.id,
     }
     const funcSuccess = (response: any) => {
-      console.log(response.data);
       setFollowing([...following, userData.id])
+      userData.following.push(userStatus.id);
+      setIsFollowing(true);
     }
     const funcError = (error: any) => {
       console.log(error);
@@ -73,14 +75,23 @@ const UserPage: NextPage<UserPageProps> = ({ userData }) => {
       following_id: userData.id,
     }
     const funcSuccess = (response: any) => {
-      console.log(response.data);
       setFollowing(following.filter((id:number) => id !== userData.id));
+      userData.following = userData.following.filter((id:number) => id !== userStatus.id);
+      setIsFollowing(false);
     }
     const funcError = (error: any) => {
       console.log(error);
     }
     apiAccess('UNFOLLOW', funcSuccess, funcError, payload);
   }
+
+  const [isFollowing, setIsFollowing] = useState(false);
+  useEffect(() => {
+    if (following.includes(userData.id)) {
+      setIsFollowing(true);
+    }
+  }, [])
+  
 
 
   if (router.isFallback) {
@@ -99,17 +110,21 @@ const UserPage: NextPage<UserPageProps> = ({ userData }) => {
               <Avatar src={`http://localhost:8000${userData.user_icon}`} sx={{width:"100px", height:"100px", border:"3px solid rgb(34,34,34)", transform:"translateY(-50px)"}}/>
             </Box>
           </Box>
-          <Box sx={{display:"flex", justifyContent:"center", alignItems:"center", width:"100%", backgroundColor:"rgb(34,34,34)"}}>
+          <Box sx={{display:"flex", justifyContent:"center", alignItems:"center", width:"100%", backgroundColor:"rgb(34,34,34)", transform:"translateY(-20px)"}}>
             <Box sx={{px:5, display:"flex", flexDirection:"column", alignItems:"center"}}>
               <Typography sx={{color:"white", fontSize:"20px"}}>{userData?.username}</Typography>
               <Typography fontWeight="bold" sx={{color:"lightblue", fontSize:"15px"}}>{userData?.twitter_link}</Typography>
               <Typography sx={{color:"white", fontSize:"15px"}}>{userData?.profile}</Typography>
                 <Box>
-                  {following.includes(userData.id) ? 
-                    <Button onClick={clickFollow} sx={{mt:"10px", color:"white", backgroundColor:"rgb(34,34,34)", border:"1px solid white"}}>フォロー</Button>
-                  :
+                  {isFollowing ? 
                     <Button onClick={clickUnfollow} sx={{mt:"10px", color:"white", backgroundColor:"rgb(34,34,34)", border:"1px solid white"}}>フォロー中</Button>
+                  :
+                    <Button onClick={clickFollow} sx={{mt:"10px", color:"white", backgroundColor:"rgb(34,34,34)", border:"1px solid white"}}>フォロー</Button>
                   }
+                </Box>
+                <Box display="flex" gap={5} mt={2}>
+                  <Box><b>{userData.following.length}</b> フォロー中</Box>
+                  <Box><b>{userData.follower.length}</b> フォロワー</Box>
                 </Box>
             </Box>
           </Box>

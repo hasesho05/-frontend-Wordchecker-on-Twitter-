@@ -9,9 +9,7 @@ import Loading from "./common/Loading/Loading";
 
 import Post from "./common/Post";
 
-
-
-const NewPostBox = (props:any) => {
+const PopularPostBox = (props:any) => {
   const { open, setOpen, setId } = props;
   const [isLoading, setIsLoading] = useState(true)
   const [newPosts, setNewPosts] = useRecoilState(PostState)
@@ -25,7 +23,7 @@ const NewPostBox = (props:any) => {
     const funcError = (error: any) => {
       console.log(error)
     }
-    apiAccess("GET_NEW_POSTS", funcSuccess, funcError, payload)
+    apiAccess("GET_POPULAR_POSTS", funcSuccess, funcError, payload)
   }
 
   useEffect(() => {
@@ -48,4 +46,4 @@ const NewPostBox = (props:any) => {
   );
 }
 
-export default NewPostBox;
+export default PopularPostBox;

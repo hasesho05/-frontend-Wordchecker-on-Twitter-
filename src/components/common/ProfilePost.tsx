@@ -34,7 +34,6 @@ const ProfilePost = (props:Props) => {
     const funcSuccess = (response: any) => {
       setIsLiked(true);
       post.like.push(userStatus.id);
-      console.log(response.data);
     }
     const funcError = (error: any) => {
       console.log(error);
@@ -95,10 +94,12 @@ const ProfilePost = (props:Props) => {
   }, [isCommentOpen])
 
   return (
-  <Box sx={{p:2, border:"1px solid darkgray"}}>
-    <Box sx={{position:"relative", minHeight:"300px", width:{xs:"320px", sm:"550px"}, display:"flex"}}>
+  <Box sx={{p:2, border:"1px solid darkgray", width:"100%"}}>
+    {post.image &&
+    <Box sx={{position:"relative", minHeight:"300px", width:{xs:"100%", sm:"100%"}, display:"flex"}}>
       <Image src={post.image} fill alt="post_image" objectFit="contain" style={{margin:"0 auto"}}/>
     </Box>
+    }
     <Box sx={{p:2}}>
       <Typography sx={{color:"white", fontSize:"15px"}}>{post.content}</Typography>
     </Box>
