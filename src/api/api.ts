@@ -30,6 +30,7 @@ export const urls = {
   add_comment: api_host + '/comment_post/',
   add_commentlike: api_host + '/comment_post/add_like/',
   remove_commentlike: api_host + '/comment_post/remove_like/',
+  get_notification: api_host + '/notification/',
   authorization: api_host + '/auth/authenticated/',
   history: api_host + '/history/',
   history_list: api_host + '/history/list/',
@@ -58,6 +59,7 @@ export const actionList = {
   ADD_COMMENT: 'ADD_COMMENT',
   ADD_COMMENTLIKE: 'ADD_COMMENTLIKE',
   REMOVE_COMMENTLIKE: 'REMOVE_COMMENTLIKE',
+  GET_NOTIFICATION: 'GET_NOTIFICATION',
   HISTORY: 'HISTORY',
   HISTORY_LIST: 'HISTORY_LIST',
   AUTHORIZATION: 'AUTHORIZATION',
@@ -309,6 +311,15 @@ async function apiAccess(action: string, funcSuccess: Function, funcError: Funct
         data: payload,
         headers: { "content-type": 'application/x-www-form-urlencoded', }
       }).then((response) => {
+        funcSuccess(response);
+      }).catch((e) => {
+        funcError(e);
+      });
+      break;
+
+    case actionList.GET_NOTIFICATION:
+      axios.get(urls.get_notification + search)
+      .then((response) => {
         funcSuccess(response);
       }).catch((e) => {
         funcError(e);
